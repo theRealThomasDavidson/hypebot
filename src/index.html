@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ohmni Robot Control</title>
+    <script src="https://api.ohmnilabs.com/ohmni-api/Ohmni-standalone.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h1>Ohmni Robot Control Panel</h1>
+    
+    <div class="control-section">
+        <h2>Evil Mode</h2>
+        <div class="button-row">
+            <button class="evil-button" onclick="activateEvilMode()">ACTIVATE EVIL MODE</button>
+            <button onclick="deactivateEvilMode()">Deactivate Evil Mode</button>
+        </div>
+    </div>
+    
+    <div class="control-section">
+        <h2>Movement Controls</h2>
+        <div class="button-row">
+            <button onclick="moveForward()">Forward</button>
+            <button onclick="moveBackward()">Backward</button>
+            <button onclick="turnLeft()">Turn Left</button>
+            <button onclick="turnRight()">Turn Right</button>
+            <button onclick="stopMoving()">Stop</button>
+        </div>
+    </div>
+    
+    <div class="control-section">
+        <h2>Neck Controls</h2>
+        <div class="button-row">
+            <button onclick="enableNeckTorque()">Enable Neck</button>
+            <button onclick="disableNeckTorque()">Disable Neck</button>
+        </div>
+        <div class="slider-container">
+            <label for="neckPosition">Neck Position (300-650):</label>
+            <input type="range" id="neckPosition" class="slider" min="300" max="650" value="512">
+            <button onclick="setNeckPosition()">Set Position</button>
+        </div>
+    </div>
+    
+    <div class="control-section">
+        <h2>Light Controls</h2>
+        <div class="button-row">
+            <button onclick="setLightColor(0, 0, 255)">Blue</button>
+            <button onclick="setLightColor(120, 255, 255)">Green</button>
+            <button onclick="setLightColor(60, 255, 255)">Yellow</button>
+            <button class="evil-button" onclick="setLightColor(0, 255, 180)">Evil Red</button>
+            <button onclick="setLightColor(0, 0, 0)">Off</button>
+        </div>
+    </div>
+    
+    <div class="control-section">
+        <h2>Speech Controls</h2>
+        <div>
+            <select id="languageSelect">
+                <option value="en-US">English (US)</option>
+                <option value="zh-TW">Chinese (Traditional)</option>
+                <option value="es-ES">Spanish</option>
+                <option value="fr-FR">French</option>
+            </select>
+            <input type="text" id="speechText" placeholder="Enter text to speak..." style="width: 70%; margin: 10px 0;">
+            <button onclick="speak()">Speak</button>
+        </div>
+        <div class="button-row">
+            <button onclick="sayHello()">Say Hello</button>
+            <button onclick="sayGoodbye()">Say Goodbye</button>
+            <button class="evil-button" onclick="sayEvilPhrase()">Say Evil Phrase</button>
+        </div>
+    </div>
+    
+    <div class="control-section">
+        <h2>Robot Info</h2>
+        <button onclick="getBotInfo()">Get Robot Info</button>
+        <div id="botInfo" class="status"></div>
+    </div>
+
+    <script src="js/ohmni-control.js"></script>
+</body>
+</html> 
