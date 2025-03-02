@@ -207,4 +207,100 @@
   border-radius: 50%;
   background: #007bff;
   cursor: pointer;
+}
+
+/* Add this to your existing App.css */
+.placeholder-camera {
+  background-color: #333;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.status-simulated {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+/* Movement Controls */
+.movement-section {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.movement-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.control-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.movement-button {
+  width: 80px;
+  height: 80px;
+  margin: 0 5px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+
+.movement-button:empty {
+  visibility: hidden;
+}
+
+.movement-button.forward {
+  background-color: #007bff;
+  color: white;
+}
+
+.movement-button.backward {
+  background-color: #007bff;
+  color: white;
+}
+
+.movement-button.left {
+  background-color: #007bff;
+  color: white;
+}
+
+.movement-button.right {
+  background-color: #007bff;
+  color: white;
+}
+
+.movement-button.stop {
+  background-color: #dc3545;
+  color: white;
+}
+
+.connect-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 15px;
+  width: 100%;
 } 

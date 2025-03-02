@@ -3,6 +3,7 @@ frontend:
   phases:
     preBuild:
       commands:
+        - nvm use 16 || true
         - npm ci
     build:
       commands:
