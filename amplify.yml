@@ -3,8 +3,8 @@ frontend:
   phases:
     preBuild:
       commands:
-        - nvm use 16 || true
-        - npm ci
+        - nvm use 18 || nvm install 18
+        - npm install
     build:
       commands:
         - npm run build
