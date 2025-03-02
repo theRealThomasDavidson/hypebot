@@ -1,12 +1,16 @@
 version: 1
 frontend:
   phases:
+    preBuild:
+      commands:
+        - npm ci
     build:
       commands:
-        - echo "No build steps required - static HTML/CSS/JS only"
+        - npm run build
   artifacts:
-    baseDirectory: src
+    baseDirectory: build
     files:
       - '**/*'
   cache:
-    paths: [] 
+    paths:
+      - node_modules/**/* 
