@@ -37,50 +37,101 @@ const RobotControl = () => {
   // Movement control functions
   const moveForward = () => {
     console.log("Moving forward");
-    if (window.Ohmni && connected) {
-      window.Ohmni.move(0.5, 0); // Forward at 0.5 speed
+    if (window.Ohmni) {
+      // Forward at 700 speed for 2000ms (2 seconds)
+      window.Ohmni.move(700, 700, 2000);
     }
   };
   
   const moveBackward = () => {
     console.log("Moving backward");
-    if (window.Ohmni && connected) {
-      window.Ohmni.move(-0.5, 0); // Backward at 0.5 speed
+    if (window.Ohmni) {
+      // Backward at 700 speed for 2000ms
+      window.Ohmni.move(-700, -700, 2000);
     }
   };
   
   const turnLeft = () => {
     console.log("Turning left");
-    if (window.Ohmni && connected) {
-      window.Ohmni.move(0, 0.5); // Left turn at 0.5 speed
+    if (window.Ohmni) {
+      // Turn left - negative left wheel, positive right wheel
+      window.Ohmni.move(-700, 700, 1500);
     }
   };
   
   const turnRight = () => {
     console.log("Turning right");
-    if (window.Ohmni && connected) {
-      window.Ohmni.move(0, -0.5); // Right turn at 0.5 speed
+    if (window.Ohmni) {
+      // Turn right - positive left wheel, negative right wheel
+      window.Ohmni.move(700, -700, 1500);
     }
   };
   
   const stopMovement = () => {
     console.log("Stopping movement");
-    if (window.Ohmni && connected) {
-      window.Ohmni.move(0, 0); // Stop all movement
+    if (window.Ohmni) {
+      // Stop all movement
+      window.Ohmni.move(0, 0, 0);
     }
   };
   
   const attemptConnection = () => {
     console.log("Attempting connection to Ohmni");
+    
+    // Check if Ohmni API is available
     if (window.Ohmni) {
-      // Replace with actual connection code
+      // Request bot info to verify connection
+      window.Ohmni.requestBotInfo();
+      
+      // Add listener for bot info response
+      window.addEventListener('botInfoUpdate', (event) => {
+        console.log("Bot info received:", event.detail);
+        setConnected(true);
+        // You could also update robot status with real data here
+      });
+      
+      // For simulation purposes:
       setConnected(true);
+    } else {
+      console.error("Ohmni API not available");
     }
   };
   
   const toggleCamera = () => {
     setCameraActive(!cameraActive);
     console.log(`Camera ${cameraActive ? 'disabled' : 'enabled'} (simulated)`);
+  };
+  
+  // Add neck control functions
+  const lookUp = () => {
+    if (window.Ohmni) {
+      window.Ohmni.setNeckTorqueEnabled(1);
+      window.Ohmni.setNeckPosition(650, 100); // Look up
+    }
+  };
+  
+  const lookDown = () => {
+    if (window.Ohmni) {
+      window.Ohmni.setNeckTorqueEnabled(1);
+      window.Ohmni.setNeckPosition(350, 100); // Look down
+    }
+  };
+  
+  const lookStraight = () => {
+    if (window.Ohmni) {
+      window.Ohmni.setNeckTorqueEnabled(1);
+      window.Ohmni.setNeckPosition(512, 100); // Look straight
+    }
+  };
+  
+  // Add a greeting function with text-to-speech
+  const sayGreeting = () => {
+    if (window.Ohmni) {
+      window.Ohmni.setSpeechLanguage("en-US");
+      window.Ohmni.say("Hello! I am your Ohmni robot assistant.", () => {
+        console.log("Finished speaking");
+      });
+    }
   };
   
   // Add more robot control functions as needed
@@ -134,6 +185,20 @@ const RobotControl = () => {
             <button className="movement-button"></button>
           </div>
         </div>
+      </div>
+      
+      <div className="neck-section">
+        <h2>Neck Controls</h2>
+        <div className="control-row">
+          <button className="movement-button" onClick={lookUp}>Look Up</button>
+          <button className="movement-button" onClick={lookStraight}>Look Straight</button>
+          <button className="movement-button" onClick={lookDown}>Look Down</button>
+        </div>
+      </div>
+      
+      <div className="speech-section">
+        <h2>Voice Controls</h2>
+        <button className="speech-button" onClick={sayGreeting}>Say Greeting</button>
       </div>
       
       <div className="camera-section">
