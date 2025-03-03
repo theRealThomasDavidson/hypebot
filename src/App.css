@@ -329,4 +329,30 @@
   font-size: 16px;
   margin-top: 10px;
   width: 100%;
+}
+
+/* Add to end of file */
+body {
+  overflow-y: auto;
+  padding-bottom: 50px;
+}
+
+/* Make the control panel more responsive */
+.robot-control-panel {
+  margin: 20px auto;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+/* Add scroll indicator for mobile */
+@media (max-width: 768px) {
+  .robot-control-panel::after {
+    content: "Scroll for more controls";
+    display: block;
+    text-align: center;
+    color: #666;
+    font-size: 0.8rem;
+    padding: 10px 0;
+    margin-top: 10px;
+  }
 } 

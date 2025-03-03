@@ -35,8 +35,35 @@ const RobotControl = () => {
   }, []);
   
   // Movement control functions
+  const showButtonFeedback = (action) => {
+    // Provide visual feedback even if API doesn't work
+    console.log(`${action} action triggered (simulation only)`);
+    
+    // Create and show a temporary notification
+    const notification = document.createElement('div');
+    notification.textContent = `${action} command sent`;
+    notification.style.position = 'fixed';
+    notification.style.bottom = '20px';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    notification.style.color = 'white';
+    notification.style.padding = '10px 20px';
+    notification.style.borderRadius = '20px';
+    notification.style.zIndex = '1000';
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 2 seconds
+    setTimeout(() => {
+      document.body.removeChild(notification);
+    }, 2000);
+  };
+  
   const moveForward = () => {
     console.log("Moving forward");
+    showButtonFeedback("Forward");
+    
     if (window.Ohmni) {
       // Forward at 700 speed for 2000ms (2 seconds)
       window.Ohmni.move(700, 700, 2000);
