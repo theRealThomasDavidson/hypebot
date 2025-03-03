@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Metrics</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .metrics-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            color: #3498db;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .metric {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .metric-name {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .metric-value {
+            float: right;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .live-box {
+            background: #2ecc71;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(46, 204, 113, 0.3);
+        }
+        
+        .rainbow-text {
+            background: linear-gradient(to right, #ff9a9e, #fad0c4, #fad0c4, #ffd1ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 600px) {
+            .metrics-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        #color-box {
+            width: 100%;
+            height: 40px;
+            margin-top: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Screen Metrics <span class="rainbow-text">Live</span></h1>
+        
+        <div class="metrics-container">
+            <div class="metrics-card">
+                <h2 class="section-title">Screen Properties</h2>
+                <div class="metric">
+                    <span class="metric-name">Screen Width:</span>
+                    <span class="metric-value" id="screen-width">0px</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Screen Height:</span>
+                    <span class="metric-value" id="screen-height">0px</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Available Width:</span>
+                    <span class="metric-value" id="avail-width">0px</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Available Height:</span>
+                    <span class="metric-value" id="avail-height">0px</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Color Depth:</span>
+                    <span class="metric-value" id="color-depth">0 bits</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Pixel Depth:</span>
+                    <span class="metric-value" id="pixel-depth">0 bits</span>
+                </div>
+            </div>
+            
+            <div class="metrics-card">
+                <h2 class="section-title">Viewport Properties</h2>
+                <div class="metric">
+                    <span class="metric-name">Inner Width:</span>
+                    <span class="metric-value" id="inner-width">0px</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Inner Height:</span>
+                    <span class="metric-value" id="inner-height">0px</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Client Width:</span>
+                    <span class="metric-value" id="client-width">0px</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Client Height:</span>
+                    <span class="metric-value" id="client-height">0px</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Device Pixel Ratio:</span>
+                    <span class="metric-value" id="pixel-ratio">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Orientation:</span>
+                    <span class="metric-value" id="orientation">Unknown</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="metrics-card" style="margin-top: 20px;">
+            <h2 class="section-title">Device Information</h2>
+            <div class="metric">
+                <span class="metric-name">User Agent:</span>
+                <span class="metric-value" id="user-agent" style="float: none; display: block; margin-top: 5px; word-break: break-all;">Unknown</span>
+            </div>
+            <div class="metric">
+                <span class="metric-name">Platform:</span>
+                <span class="metric-value" id="platform">Unknown</span>
+            </div>
+            <div class="metric">
+                <span class="metric-name">Touch Support:</span>
+                <span class="metric-value" id="touch-support">Unknown</span>
+            </div>
+            <div class="metric">
+                <span class="metric-name">CSS Color:</span>
+                <span class="metric-value" id="css-color">Unknown</span>
+            </div>
+            <div id="color-box"></div>
+        </div>
+        
+        <div class="live-box">
+            ✅ Metrics update in real-time as you resize your browser
+        </div>
+    </div>
+    
+    <script>
+        // Function to update all metrics
+        function updateMetrics() {
+            // Screen properties
+            document.getElementById('screen-width').textContent = window.screen.width + 'px';
+            document.getElementById('screen-height').textContent = window.screen.height + 'px';
+            document.getElementById('avail-width').textContent = window.screen.availWidth + 'px';
+            document.getElementById('avail-height').textContent = window.screen.availHeight + 'px';
+            document.getElementById('color-depth').textContent = window.screen.colorDepth + ' bits';
+            document.getElementById('pixel-depth').textContent = window.screen.pixelDepth + ' bits';
+            
+            // Viewport properties
+            document.getElementById('inner-width').textContent = window.innerWidth + 'px';
+            document.getElementById('inner-height').textContent = window.innerHeight + 'px';
+            document.getElementById('client-width').textContent = document.documentElement.clientWidth + 'px';
+            document.getElementById('client-height').textContent = document.documentElement.clientHeight + 'px';
+            document.getElementById('pixel-ratio').textContent = window.devicePixelRatio.toFixed(2);
+            
+            // Orientation
+            const orientation = window.innerWidth > window.innerHeight ? 'Landscape' : 'Portrait';
+            document.getElementById('orientation').textContent = orientation;
+            
+            // Device information
+            document.getElementById('user-agent').textContent = navigator.userAgent;
+            document.getElementById('platform').textContent = navigator.platform;
+            document.getElementById('touch-support').textContent = ('ontouchstart' in window) ? 'Yes' : 'No';
+            
+            // Dynamic color
+            const hue = (Date.now() / 100) % 360;
+            const color = `hsl(${hue}, 70%, 60%)`;
+            document.getElementById('color-box').style.backgroundColor = color;
+            document.getElementById('css-color').textContent = color;
+        }
+        
+        // Update metrics on load
+        updateMetrics();
+        
+        // Update metrics when window is resized
+        window.addEventListener('resize', updateMetrics);
+        
+        // Update color continuously
+        setInterval(() => {
+            const hue = (Date.now() / 100) % 360;
+            const color = `hsl(${hue}, 70%, 60%)`;
+            document.getElementById('color-box').style.backgroundColor = color;
+            document.getElementById('css-color').textContent = color;
+        }, 100);
+    </script>
+</body>
+</html> 

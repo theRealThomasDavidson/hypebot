@@ -70,6 +70,132 @@ button:hover {
     margin-top: 15px;
 }
 
+.linkedin-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.profile-section {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.qr-section {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.qr-code {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.qr-section p {
+    margin-top: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Remove any old LinkedIn styles that might conflict */
+.linkedin-button {
+    display: none;
+}
+
+.github-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.github-container .profile-section,
+.github-container .repo-section {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.github-stats,
+.github-langs {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Add this to your existing CSS */
+.github-container .qr-section {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.contrib-section {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.contrib-section h3 {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.github-contrib-chart {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #fff;
+}
+
+.social-profiles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+}
+
+.linkedin-container, .github-container {
+    flex: 1;
+    min-width: 300px;
+    margin: 0;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .social-profiles {
+        flex-direction: column;
+    }
+    
+    .linkedin-container, .github-container {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
 @media (max-width: 600px) {
     .button-row {
         flex-direction: column;
@@ -78,4 +204,33 @@ button:hover {
     button {
         width: 100%;
     }
+}
+
+.profile-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    gap: 15px;
+    max-width: 1200px;
+}
+
+.profile-toggle-btn {
+    background-color: #0077B5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.profile-toggle-btn:hover {
+    background-color: #005e8d;
+}
+
+#currentProfile {
+    font-size: 16px;
+    color: #555;
 } 

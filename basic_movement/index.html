@@ -10,6 +10,195 @@
 <body>
     <h1>Ohmni Robot Control Panel</h1>
     
+    <div class="profile-switcher"
+         data-linkedin-username="ryan-w-heron" 
+         data-github-username="malibuwileyu"
+         data-alt-linkedin-username="thomas-davidson-47581315b"
+         data-alt-github-username="theRealThomasDavidson">
+        <button id="profileToggle" class="profile-toggle-btn">Switch Profile</button>
+        <span id="currentProfile">Current: Ryan Heron</span>
+    </div>
+    
+    <div class="social-profiles">
+        
+        <!-- LinkedIn Scripts -->
+        <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+        <script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
+        
+        <!-- GitHub Username Handling Script -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const switcherDiv = document.querySelector('.profile-switcher');
+                const toggleBtn = document.getElementById('profileToggle');
+                const currentProfileSpan = document.getElementById('currentProfile');
+                let isAltProfile = false;
+                
+                // Set initial LinkedIn username to match the data attribute
+                const initialLinkedinUsername = switcherDiv.getAttribute('data-linkedin-username');
+                const linkedinContainer = document.querySelector('.linkedin-container .profile-section');
+                linkedinContainer.innerHTML = `
+                    <div 
+                        class="badge-base LI-profile-badge" 
+                        data-locale="en_US" 
+                        data-size="large" 
+                        data-theme="light" 
+                        data-type="HORIZONTAL" 
+                        data-vanity="${initialLinkedinUsername}" 
+                        data-version="v1">
+                    </div>
+                `;
+                
+                // Initial setup after a slight delay to ensure LinkedIn API has loaded
+                setTimeout(function() {
+                    updateProfiles();
+                }, 500);
+                
+                // Toggle button handler
+                toggleBtn.addEventListener('click', function() {
+                    isAltProfile = !isAltProfile;
+                    toggleBtn.disabled = true;
+                    toggleBtn.textContent = "Switching...";
+                    
+                    // Show loading indication
+                    currentProfileSpan.textContent = "Loading profile...";
+                    
+                    // Update profiles with a delay to show loading state
+                    setTimeout(function() {
+                        updateProfiles();
+                        toggleBtn.disabled = false;
+                        toggleBtn.textContent = "Switch Profile";
+                    }, 300);
+                });
+                
+                function updateProfiles() {
+                    // Get the right set of usernames
+                    const githubUsername = isAltProfile ? 
+                        switcherDiv.getAttribute('data-alt-github-username') : 
+                        switcherDiv.getAttribute('data-github-username');
+                    
+                    const linkedinUsername = isAltProfile ? 
+                        switcherDiv.getAttribute('data-alt-linkedin-username') : 
+                        switcherDiv.getAttribute('data-linkedin-username');
+                    
+                    // Update display name
+                    currentProfileSpan.textContent = isAltProfile ? 
+                        "Current: Thomas Davidson" : "Current: Ryan Heron";
+                    
+                    // Set GitHub URLs
+                    document.getElementById('github-stats').src = 
+                        `https://github-readme-stats.vercel.app/api?username=${githubUsername}&show_icons=true&theme=default`;
+                    
+                    document.getElementById('github-contrib').src = 
+                        `https://ghchart.rshah.org/${githubUsername}`;
+                    
+                    document.getElementById('github-langs').src = 
+                        `https://github-readme-stats.vercel.app/api/top-langs/?username=${githubUsername}&layout=compact&theme=default`;
+                    
+                    document.getElementById('github-qr').src = 
+                        `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/${githubUsername}`;
+                    
+                    // Set LinkedIn QR code
+                    document.getElementById('linkedin-qr').src = 
+                        `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.linkedin.com/in/${linkedinUsername}`;
+                    
+                    // Force LinkedIn badge to completely refresh
+                    completelyRefreshLinkedIn(linkedinUsername);
+                }
+                
+                function completelyRefreshLinkedIn(username) {
+                    // Get the profile section container
+                    const linkedinContainer = document.querySelector('.linkedin-container .profile-section');
+                    
+                    // Completely replace with new content
+                    linkedinContainer.innerHTML = `
+                        <div 
+                            class="badge-base LI-profile-badge" 
+                            data-locale="en_US" 
+                            data-size="large" 
+                            data-theme="light" 
+                            data-type="HORIZONTAL" 
+                            data-vanity="${username}" 
+                            data-version="v1">
+                        </div>
+                    `;
+                    
+                    // Reload LinkedIn scripts by removing and re-adding them
+                    const oldScripts = document.querySelectorAll('script[src*="platform.linkedin.com"]');
+                    oldScripts.forEach(script => script.remove());
+                    
+                    // Add new scripts
+                    const scriptIN = document.createElement('script');
+                    scriptIN.src = "https://platform.linkedin.com/in.js";
+                    scriptIN.type = "text/javascript";
+                    scriptIN.innerHTML = "lang: en_US";
+                    document.body.appendChild(scriptIN);
+                    
+                    const scriptBadge = document.createElement('script');
+                    scriptBadge.src = "https://platform.linkedin.com/badges/js/profile.js";
+                    scriptBadge.async = true;
+                    scriptBadge.defer = true;
+                    scriptBadge.type = "text/javascript";
+                    document.body.appendChild(scriptBadge);
+                }
+            });
+        </script>
+        
+        <div class="linkedin-container">
+            <div class="qr-section">
+                <img 
+                    id="linkedin-qr"
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.linkedin.com/in/ryan-w-heron" 
+                    alt="LinkedIn Profile QR Code" 
+                    class="qr-code">
+                <p>Scan to view LinkedIn profile</p>
+            </div>
+            <div class="profile-section">
+                <!-- LinkedIn badge will be dynamically inserted here -->
+            </div>
+        </div>
+        
+        <div class="github-container">
+            <div class="qr-section">
+                <img 
+                    id="github-qr"
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/theRealThomasDavidson" 
+                    alt="GitHub Profile QR Code" 
+                    class="qr-code">
+                <p>Scan to view GitHub profile</p>
+            </div>
+            <div class="profile-section">
+                <iframe
+                    id="github-stats"
+                    src="https://github-readme-stats.vercel.app/api?username=theRealThomasDavidson&show_icons=true&theme=default"
+                    frameborder="0"
+                    scrolling="no"
+                    width="100%"
+                    height="200"
+                    class="github-stats">
+                </iframe>
+            </div>
+            <div class="contrib-section">
+                <h3>Contribution Activity</h3>
+                <img 
+                    id="github-contrib"
+                    src="https://ghchart.rshah.org/theRealThomasDavidson" 
+                    alt="GitHub Contribution Graph" 
+                    class="github-contrib-chart">
+            </div>
+            <div class="repo-section">
+                <iframe
+                    id="github-langs"
+                    src="https://github-readme-stats.vercel.app/api/top-langs/?username=theRealThomasDavidson&layout=compact&theme=default"
+                    frameborder="0"
+                    scrolling="no"
+                    width="100%"
+                    height="150"
+                    class="github-langs">
+                </iframe>
+            </div>
+        </div>
+    </div>
+    
     <div class="control-section">
         <h2>Evil Mode</h2>
         <div class="button-row">
