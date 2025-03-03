@@ -5,10 +5,10 @@ import '../App.css';
 // or recreate the essential parts directly in this component
 
 const RobotControl = () => {
-  const [robotIp, setRobotIp] = useState('192.168.1.100');
-  const [robotStatus, setRobotStatus] = useState('Simulated');
+  const [connectionStatus, setConnectionStatus] = useState('disconnected');
+  const [botInfo, setBotInfo] = useState(null);
   const [cameraActive, setCameraActive] = useState(false);
-  const [connected, setConnected] = useState(false);
+  const [actionFeedback, setActionFeedback] = useState(null);
   
   // Mock data for demonstration
   const MOCK_ROBOT_DATA = {
@@ -29,7 +29,7 @@ const RobotControl = () => {
       
       // Check if robot is already connected via the API
       if (window.Ohmni.getConnectionState() === 'connected') {
-        setConnected(true);
+        setConnectionStatus('connected');
         window.Ohmni.requestBotInfo(); // Get current robot info
       }
     } else {
@@ -50,8 +50,8 @@ const RobotControl = () => {
     console.log("Bot info received:", event.detail);
     // Update robot data with real information
     if (event.detail) {
-      setRobotIp(event.detail.ip || '192.168.1.100');
-      setRobotStatus('Connected');
+      setBotInfo(event.detail);
+      setConnectionStatus('connected');
       // You can extract more info from event.detail as needed
     }
   };
@@ -59,11 +59,9 @@ const RobotControl = () => {
   const handleConnectionState = (event) => {
     console.log("Connection state changed:", event.detail);
     if (event.detail === 'connected') {
-      setConnected(true);
-      setRobotStatus('Connected');
+      setConnectionStatus('connected');
     } else {
-      setConnected(false);
-      setRobotStatus('Disconnected');
+      setConnectionStatus('disconnected');
     }
   };
   
@@ -174,26 +172,25 @@ const RobotControl = () => {
             window.Ohmni.connect(robotAddress);
             
             // Show connecting status
-            setRobotStatus('Connecting...');
+            setConnectionStatus('connecting');
             showButtonFeedback("Connecting to robot");
             
             // The connection state will be updated by the event listener
           }
         } else {
           console.log("Already connected to robot");
-          setConnected(true);
+          setConnectionStatus('connected');
           window.Ohmni.requestBotInfo();
         }
       } catch (error) {
         console.error("Connection error:", error);
         showButtonFeedback("Connection failed");
-        setRobotStatus('Connection Error');
+        setConnectionStatus('connection error');
       }
     } else {
       // Fallback for demo mode
       console.log("Simulating connection (Ohmni API not available)");
-      setConnected(true);
-      setRobotStatus('Simulated');
+      setConnectionStatus('connected');
       showButtonFeedback("Connected in simulation mode");
     }
   };
@@ -248,103 +245,111 @@ const RobotControl = () => {
       }
     }
     
-    setConnected(false);
-    setRobotStatus('Disconnected');
+    setConnectionStatus('disconnected');
   };
   
   // Add more robot control functions as needed
   
   return (
     <div className="robot-control-panel">
+      <h2>Robot Control Dashboard</h2>
+      
       <div className="status-section">
-        <h2>Robot Status (Simulated)</h2>
-        <div className="info-row">
-          <span>IP Address:</span>
-          <span>{robotIp}</span>
-        </div>
-        <div className="info-row">
-          <span>Status:</span>
-          <span className="status-simulated">{robotStatus}</span>
-        </div>
-        <div className="info-row">
-          <span>Battery:</span>
-          <span>{MOCK_ROBOT_DATA.battery}</span>
-        </div>
-        <div className="info-row">
-          <span>Connection:</span>
-          <span className={connected ? "status-online" : "status-disconnected"}>
-            {connected ? "Connected" : "Disconnected"}
-          </span>
-        </div>
-        
-        {!connected && (
-          <button className="connect-button" onClick={attemptConnection}>
-            Connect to Robot
-          </button>
-        )}
-        
-        {connected && (
-          <button className="disconnect-button" onClick={disconnectRobot}>
-            Disconnect from Robot
+        <h3>Robot Status</h3>
+        <button 
+          className="connect-button" 
+          onClick={attemptConnection} 
+          disabled={connectionStatus === 'connected'}>
+          Connect to Robot
+        </button>
+        {connectionStatus === 'connected' && (
+          <button 
+            className="disconnect-button" 
+            onClick={disconnectRobot}>
+            Disconnect Robot
           </button>
         )}
       </div>
       
       <div className="movement-section">
-        <h2>Movement Controls</h2>
+        <h3>Movement Controls</h3>
         <div className="movement-controls">
           <div className="control-row">
             <button className="movement-button"></button>
-            <button className="movement-button forward" onClick={moveForward}>Forward</button>
+            <button 
+              className="movement-button forward" 
+              onClick={moveForward}>
+              Forward
+            </button>
             <button className="movement-button"></button>
           </div>
           <div className="control-row">
-            <button className="movement-button left" onClick={turnLeft}>Left</button>
-            <button className="movement-button stop" onClick={stopMovement}>Stop</button>
-            <button className="movement-button right" onClick={turnRight}>Right</button>
+            <button 
+              className="movement-button left" 
+              onClick={turnLeft}>
+              Left
+            </button>
+            <button 
+              className="movement-button stop" 
+              onClick={stopMovement}>
+              Stop
+            </button>
+            <button 
+              className="movement-button right" 
+              onClick={turnRight}>
+              Right
+            </button>
           </div>
           <div className="control-row">
             <button className="movement-button"></button>
-            <button className="movement-button backward" onClick={moveBackward}>Back</button>
+            <button 
+              className="movement-button backward" 
+              onClick={moveBackward}>
+              Backward
+            </button>
             <button className="movement-button"></button>
           </div>
         </div>
       </div>
       
       <div className="neck-section">
-        <h2>Neck Controls</h2>
-        <div className="control-row">
-          <button className="movement-button" onClick={lookUp}>Look Up</button>
-          <button className="movement-button" onClick={lookStraight}>Look Straight</button>
-          <button className="movement-button" onClick={lookDown}>Look Down</button>
-        </div>
+        <h3>Neck Controls</h3>
+        <button onClick={lookUp}>Look Up</button>
+        <button onClick={lookStraight}>Look Straight</button>
+        <button onClick={lookDown}>Look Down</button>
       </div>
       
       <div className="speech-section">
-        <h2>Voice Controls</h2>
-        <button className="speech-button" onClick={sayGreeting}>Say Greeting</button>
+        <h3>Speech</h3>
+        <button 
+          className="speech-button"
+          onClick={sayGreeting}>
+          Say Hello
+        </button>
       </div>
       
       <div className="camera-section">
-        <h2>Camera Control (Simulated)</h2>
+        <h3>Camera</h3>
         <button 
-          className={`camera-toggle ${cameraActive ? 'active' : ''}`} 
-          onClick={toggleCamera}
-        >
-          {cameraActive ? 'Disable Camera' : 'Enable Camera'}
+          className={`camera-toggle ${cameraActive ? 'active' : ''}`}
+          onClick={toggleCamera}>
+          {cameraActive ? 'Turn Off Camera' : 'Turn On Camera'}
         </button>
-        
         {cameraActive && (
           <div className="camera-feed">
             <div className="placeholder-camera">
-              <p>Camera Feed Simulation</p>
-              <p>Backend not required for this demo</p>
+              <p>Camera feed would display here</p>
+              <p>Connect to a real robot to see video</p>
             </div>
           </div>
         )}
       </div>
       
-      {/* More control panels as needed */}
+      {actionFeedback && (
+        <div className="action-feedback">
+          <p>{actionFeedback}</p>
+        </div>
+      )}
     </div>
   );
 };
