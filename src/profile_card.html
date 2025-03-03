@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile Cards</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --text-color: #333;
+            --light-gray: #f5f7fa;
+            --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .search-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        #search-input {
+            padding: 10px 15px;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all var(--transition-speed);
+        }
+
+        #search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        /* Featured profiles section */
+        .featured-section {
+            margin-bottom: 40px;
+        }
+        
+        .featured-heading {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            position: relative;
+        }
+        
+        .featured-heading::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: var(--primary-color);
+            margin: 10px auto;
+        }
+        
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .featured-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .featured-card::before {
+            content: 'Featured';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .featured-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .featured-img-container {
+            height: 240px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .featured-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-speed);
+        }
+        
+        .featured-card:hover .featured-img {
+            transform: scale(1.05);
+        }
+
+        /* Regular cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .profile-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .card-img-container {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            background-color: #e1e1e1;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-speed);
+        }
+
+        .profile-card:hover .card-img {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .card-bio {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color var(--transition-speed);
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .card-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Filter visibility for search */
+        .hidden {
+            display: none;
+        }
+
+        /* Loading indicator */
+        .loading-container {
+            text-align: center;
+            padding: 30px;
+            grid-column: 1 / -1;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            
+            .featured-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cards-grid, .featured-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* No results message */
+        #no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            display: none;
+        }
+        
+        /* Scroll progress indicator */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--primary-color);
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.1s;
+        }
+        
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress"></div>
+    
+    <div class="container">
+        <header>
+            <h1>Student Profiles</h1>
+            <p>Connect with talented students from our program</p>
+            
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search by name, skills, or interests...">
+            </div>
+        </header>
+        
+        <!-- Featured profiles section -->
+        <section class="featured-section">
+            <h2 class="featured-heading">Featured Students</h2>
+            <div class="featured-grid">
+                <!-- Featured Profile 1 -->
+                <div class="featured-card" data-name="Alexandra Morgan" data-keywords="AI research, computer vision, deep learning">
+                    <div class="featured-img-container">
+                        <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Alexandra Morgan" class="featured-img" loading="eager">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-name">Alexandra Morgan</h3>
+                        <div class="card-title">AI Research Lead</div>
+                        <p class="card-bio">Leading the latest innovations in computer vision and deep learning with published papers in top conferences.</p>
+                        <a href="../basic_movement/index.html" class="card-button">View Profile</a>
+                    </div>
+                </div>
+                
+                <!-- Featured Profile 2 -->
+                <div class="featured-card" data-name="Marcus Chen" data-keywords="robotics, hardware design, mechatronics">
+                    <div class="featured-img-container">
+                        <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="Marcus Chen" class="featured-img" loading="eager">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-name">Marcus Chen</h3>
+                        <div class="card-title">Robotics Engineer</div>
+                        <p class="card-bio">Designs and builds advanced robotic systems with a focus on efficient hardware-software integration.</p>
+                        <a href="#" class="card-button">View Profile</a>
+                    </div>
+                </div>
+                
+                <!-- Featured Profile 3 -->
+                <div class="featured-card" data-name="Sophia Williams" data-keywords="data science, NLP, machine learning">
+                    <div class="featured-img-container">
+                        <img src="https://randomuser.me/api/portraits/women/9.jpg" alt="Sophia Williams" class="featured-img" loading="eager">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-name">Sophia Williams</h3>
+                        <div class="card-title">Data Science Lead</div>
+                        <p class="card-bio">Expert in natural language processing and predictive analytics with experience at top tech companies.</p>
+                        <a href="#" class="card-button">View Profile</a>
+                    </div>
+                </div>
+                
+                <!-- Featured Profile 4 -->
+                <div class="featured-card" data-name="Raj Patel" data-keywords="cloud architecture, kubernetes, devops">
+                    <div class="featured-img-container">
+                        <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Raj Patel" class="featured-img" loading="eager">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-name">Raj Patel</h3>
+                        <div class="card-title">Cloud Architect</div>
+                        <p class="card-bio">Specializes in designing scalable cloud solutions and implementing modern DevOps practices.</p>
+                        <a href="#" class="card-button">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <h2 class="featured-heading">All Students</h2>
+        <div class="cards-grid" id="cards-container">
+            <!-- Loading indicator -->
+            <div class="loading-container" id="loading-indicator">
+                <div class="loading-spinner"></div>
+                <p>Loading profiles...</p>
+            </div>
+
+            <!-- No results message -->
+            <div id="no-results">
+                <h3>No matching profiles found</h3>
+                <p>Try adjusting your search terms</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="back-to-top" id="back-to-top">↑</div>
+
+    <script>
+        // =========================================================================
+        // CARD DATA - MODIFY THIS SECTION TO ADD/EDIT STUDENT PROFILES
+        // =========================================================================
+        
+        // Featured profiles are defined in the HTML above
+        
+        // Regular student profiles - add, remove or edit these as needed
+        const studentProfiles = [
+            // The format for each student is:
+            // {
+            //    name: "Student Name",               // Required: Student's name
+            //    imageUrl: "URL_to_image",           // Required: URL to profile image
+            //    title: "Student Title/Role",        // Required: Student's professional title
+            //    bio: "Brief description...",        // Required: Short bio (1-2 sentences)
+            //    profileUrl: "URL_to_profile_page",  // Required: URL to detailed profile page
+            //    keywords: "keyword1, keyword2, ..." // Optional: Keywords for search filtering
+            // }
+            
+            // Example profile 1
+            {
+                name: "Emma Johnson",
+                imageUrl: "https://randomuser.me/api/portraits/women/33.jpg",
+                title: "Frontend Developer",
+                bio: "Passionate about creating intuitive user interfaces with React and modern JavaScript.",
+                profileUrl: "profile.html?id=1",
+                keywords: "javascript, react, frontend, ui"
+            },
+            
+            // Example profile 2
+            {
+                name: "Liam Davis",
+                imageUrl: "https://randomuser.me/api/portraits/men/42.jpg",
+                title: "Data Scientist",
+                bio: "Analyzes complex datasets using Python and machine learning to extract meaningful insights.",
+                profileUrl: "profile.html?id=2",
+                keywords: "python, data science, machine learning, tensorflow"
+            },
+            
+            // Example profile 3
+            {
+                name: "Olivia Martinez",
+                imageUrl: "https://randomuser.me/api/portraits/women/56.jpg",
+                title: "Backend Developer",
+                bio: "Specializes in building robust backend systems using Java and Spring framework.",
+                profileUrl: "profile.html?id=3",
+                keywords: "java, spring, backend, api"
+            },
+            
+            // Example profile 4
+            {
+                name: "Noah Smith",
+                imageUrl: "https://randomuser.me/api/portraits/men/17.jpg",
+                title: "UX Designer",
+                bio: "Creates user-centered designs and prototypes using Figma and other design tools.",
+                profileUrl: "profile.html?id=4",
+                keywords: "ux, design, figma, user research"
+            },
+            
+            // Example profile 5
+            {
+                name: "Ava Wilson",
+                imageUrl: "https://randomuser.me/api/portraits/women/22.jpg",
+                title: "Mobile Developer",
+                bio: "Builds elegant mobile applications for Apple devices using Swift and UIKit.",
+                profileUrl: "profile.html?id=5",
+                keywords: "mobile, ios, swift, android"
+            }
+            
+            // Add more profiles here as needed
+            // When integrating with a backend, this array will be populated from the server
+        ];
+        
+        // To demonstrate many profiles, we'll clone these base profiles multiple times
+        // This code is only for demonstration and would be removed in the real implementation
+        function generateManyProfiles(baseProfiles, count) {
+            const result = [];
+            
+            for (let i = 0; i < count; i++) {
+                // Clone a random profile from the base profiles
+                const baseIndex = i % baseProfiles.length;
+                const baseProfile = baseProfiles[baseIndex];
+                
+                // Create a unique profile by modifying some properties
+                const gender = Math.random() > 0.5 ? 'men' : 'women';
+                const photoId = Math.floor(Math.random() * 99);
+                
+                const profile = {
+                    name: baseProfile.name,
+                    imageUrl: `https://randomuser.me/api/portraits/${gender}/${photoId}.jpg`,
+                    title: baseProfile.title,
+                    bio: baseProfile.bio,
+                    profileUrl: `profile.html?id=${i + 6}`, // Start IDs after the base profiles
+                    keywords: baseProfile.keywords
+                };
+                
+                result.push(profile);
+            }
+            
+            return result;
+        }
+        
+        // Combine the base profiles with generated profiles for demonstration
+        // In a real implementation, this would be replaced with data from your backend
+        const allProfiles = [
+            ...studentProfiles,
+            ...generateManyProfiles(studentProfiles, 145) // Generate additional profiles to reach 150 total
+        ];
+        
+        // =========================================================================
+        // PROFILE CARD FUNCTIONALITY - DOES NOT NEED MODIFICATION
+        // =========================================================================
+        
+        // DOM elements
+        const cardsContainer = document.getElementById('cards-container');
+        const searchInput = document.getElementById('search-input');
+        const noResults = document.getElementById('no-results');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const backToTopButton = document.getElementById('back-to-top');
+        const scrollProgress = document.querySelector('.scroll-progress');
+        
+        // Create card DOM element
+        function createCardElement(profile, index) {
+            const card = document.createElement('div');
+            card.className = 'profile-card';
+            card.setAttribute('data-name', profile.name);
+            card.setAttribute('data-keywords', profile.keywords || '');
+            card.style.animationDelay = `${index * 30}ms`;
+            
+            card.innerHTML = `
+                <div class="card-img-container">
+                    <img data-src="${profile.imageUrl}" alt="${profile.name}" class="card-img" loading="lazy">
+                </div>
+                <div class="card-content">
+                    <h3 class="card-name">${profile.name}</h3>
+                    <div class="card-title">${profile.title}</div>
+                    <p class="card-bio">${profile.bio}</p>
+                    <a href="${profile.profileUrl}" class="card-button">View Profile</a>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Lazy loading implementation
+        function lazyLoadImages() {
+            const images = document.querySelectorAll('img[data-src]');
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.getAttribute('data-src');
+                        img.removeAttribute('data-src');
+                        observer.unobserve(img);
+                    }
+                });
+            }, options);
+            
+            images.forEach(img => {
+                observer.observe(img);
+            });
+        }
+        
+        // Display profiles from the data
+        function displayProfiles(profiles) {
+            // Clear any existing cards (except no-results message)
+            Array.from(cardsContainer.children).forEach(child => {
+                if (child.id !== 'no-results' && child.id !== 'loading-indicator') {
+                    cardsContainer.removeChild(child);
+                }
+            });
+            
+            // Show loading indicator
+            loadingIndicator.style.display = 'block';
+            
+            // Use setTimeout to avoid blocking the UI
+            setTimeout(() => {
+                // Batch DOM operations for performance
+                const fragment = document.createDocumentFragment();
+                
+                profiles.forEach((profile, index) => {
+                    const card = createCardElement(profile, index);
+                    fragment.appendChild(card);
+                });
+                
+                // Remove loading indicator
+                loadingIndicator.style.display = 'none';
+                
+                // Append all cards at once
+                cardsContainer.appendChild(fragment);
+                
+                // Initialize lazy loading
+                lazyLoadImages();
+            }, 10);
+        }
+        
+        // Search functionality
+        function setupSearch() {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                let hasVisibleCards = false;
+                const cards = document.querySelectorAll('.profile-card');
+                
+                cards.forEach(card => {
+                    const name = card.getAttribute('data-name').toLowerCase();
+                    const keywords = card.getAttribute('data-keywords').toLowerCase();
+                    const content = card.textContent.toLowerCase();
+                    
+                    if (name.includes(searchTerm) || keywords.includes(searchTerm) || content.includes(searchTerm)) {
+                        card.classList.remove('hidden');
+                        hasVisibleCards = true;
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+                
+                // Show or hide the "no results" message
+                noResults.style.display = hasVisibleCards ? 'none' : 'block';
+            });
+        }
+        
+        // Scroll progress indicator
+        function updateScrollProgress() {
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (window.scrollY / windowHeight) * 100;
+            scrollProgress.style.width = scrolled + '%';
+            
+            // Show/hide back to top button
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        }
+        
+        // Back to top functionality
+        function setupBackToTop() {
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            displayProfiles(allProfiles);
+            setupSearch();
+            setupBackToTop();
+            
+            // Set up scroll listeners
+            window.addEventListener('scroll', updateScrollProgress);
+        });
+    </script>
+</body>
+</html>
