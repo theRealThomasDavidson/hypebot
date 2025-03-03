@@ -19,20 +19,53 @@ const RobotControl = () => {
   };
   
   useEffect(() => {
-    // Initialize Ohmni API if available
+    // Check if Ohmni API is available
     if (window.Ohmni) {
-      console.log("Ohmni API available");
-      // Add initialization code here
+      console.log("Ohmni API detected - initializing...");
+      
+      // Define event listeners for Ohmni API events
+      window.addEventListener('botInfoUpdate', handleBotInfo);
+      window.addEventListener('connectionStateChange', handleConnectionState);
+      
+      // Check if robot is already connected via the API
+      if (window.Ohmni.getConnectionState() === 'connected') {
+        setConnected(true);
+        window.Ohmni.requestBotInfo(); // Get current robot info
+      }
+    } else {
+      console.warn("Ohmni API not available - running in simulation mode");
     }
     
-    // Simulate fetching robot data
-    const intervalId = setInterval(() => {
-      setRobotIp(MOCK_ROBOT_DATA.ip);
-      setRobotStatus(MOCK_ROBOT_DATA.status);
-    }, 10000);
-    
-    return () => clearInterval(intervalId);
+    // Clean up event listeners
+    return () => {
+      if (window.Ohmni) {
+        window.removeEventListener('botInfoUpdate', handleBotInfo);
+        window.removeEventListener('connectionStateChange', handleConnectionState);
+      }
+    };
   }, []);
+  
+  // Add these handler functions
+  const handleBotInfo = (event) => {
+    console.log("Bot info received:", event.detail);
+    // Update robot data with real information
+    if (event.detail) {
+      setRobotIp(event.detail.ip || '192.168.1.100');
+      setRobotStatus('Connected');
+      // You can extract more info from event.detail as needed
+    }
+  };
+  
+  const handleConnectionState = (event) => {
+    console.log("Connection state changed:", event.detail);
+    if (event.detail === 'connected') {
+      setConnected(true);
+      setRobotStatus('Connected');
+    } else {
+      setConnected(false);
+      setRobotStatus('Disconnected');
+    }
+  };
   
   // Movement control functions
   const showButtonFeedback = (action) => {
@@ -65,16 +98,37 @@ const RobotControl = () => {
     showButtonFeedback("Forward");
     
     if (window.Ohmni) {
-      // Forward at 700 speed for 2000ms (2 seconds)
-      window.Ohmni.move(700, 700, 2000);
+      try {
+        if (window.Ohmni.getConnectionState() === 'connected') {
+          // Forward at 700 speed for 2000ms (2 seconds)
+          window.Ohmni.move(700, 700, 2000);
+        } else {
+          console.warn("Cannot move: Not connected to robot");
+          showButtonFeedback("Not connected");
+        }
+      } catch (error) {
+        console.error("Move forward error:", error);
+        showButtonFeedback("Command failed");
+      }
     }
   };
   
   const moveBackward = () => {
     console.log("Moving backward");
+    showButtonFeedback("Backward");
+    
     if (window.Ohmni) {
-      // Backward at 700 speed for 2000ms
-      window.Ohmni.move(-700, -700, 2000);
+      try {
+        if (window.Ohmni.getConnectionState() === 'connected') {
+          window.Ohmni.move(-700, -700, 2000);
+        } else {
+          console.warn("Cannot move: Not connected to robot");
+          showButtonFeedback("Not connected");
+        }
+      } catch (error) {
+        console.error("Move backward error:", error);
+        showButtonFeedback("Command failed");
+      }
     }
   };
   
@@ -103,24 +157,44 @@ const RobotControl = () => {
   };
   
   const attemptConnection = () => {
-    console.log("Attempting connection to Ohmni");
+    console.log("Attempting connection to Ohmni robot...");
     
-    // Check if Ohmni API is available
     if (window.Ohmni) {
-      // Request bot info to verify connection
-      window.Ohmni.requestBotInfo();
-      
-      // Add listener for bot info response
-      window.addEventListener('botInfoUpdate', (event) => {
-        console.log("Bot info received:", event.detail);
-        setConnected(true);
-        // You could also update robot status with real data here
-      });
-      
-      // For simulation purposes:
-      setConnected(true);
+      try {
+        // Check if we already have a connection
+        const connectionState = window.Ohmni.getConnectionState();
+        console.log("Current connection state:", connectionState);
+        
+        if (connectionState !== 'connected') {
+          // For real robot connection, you'd specify the robot's IP
+          // This would typically be entered by the user
+          const robotAddress = prompt("Enter robot IP address:", "192.168.1.100");
+          if (robotAddress) {
+            // Connect to the robot
+            window.Ohmni.connect(robotAddress);
+            
+            // Show connecting status
+            setRobotStatus('Connecting...');
+            showButtonFeedback("Connecting to robot");
+            
+            // The connection state will be updated by the event listener
+          }
+        } else {
+          console.log("Already connected to robot");
+          setConnected(true);
+          window.Ohmni.requestBotInfo();
+        }
+      } catch (error) {
+        console.error("Connection error:", error);
+        showButtonFeedback("Connection failed");
+        setRobotStatus('Connection Error');
+      }
     } else {
-      console.error("Ohmni API not available");
+      // Fallback for demo mode
+      console.log("Simulating connection (Ohmni API not available)");
+      setConnected(true);
+      setRobotStatus('Simulated');
+      showButtonFeedback("Connected in simulation mode");
     }
   };
   
@@ -161,6 +235,23 @@ const RobotControl = () => {
     }
   };
   
+  const disconnectRobot = () => {
+    console.log("Disconnecting from robot");
+    
+    if (window.Ohmni && window.Ohmni.getConnectionState() === 'connected') {
+      try {
+        window.Ohmni.disconnect();
+        showButtonFeedback("Disconnected from robot");
+      } catch (error) {
+        console.error("Disconnect error:", error);
+        showButtonFeedback("Disconnect failed");
+      }
+    }
+    
+    setConnected(false);
+    setRobotStatus('Disconnected');
+  };
+  
   // Add more robot control functions as needed
   
   return (
@@ -189,6 +280,12 @@ const RobotControl = () => {
         {!connected && (
           <button className="connect-button" onClick={attemptConnection}>
             Connect to Robot
+          </button>
+        )}
+        
+        {connected && (
+          <button className="disconnect-button" onClick={disconnectRobot}>
+            Disconnect from Robot
           </button>
         )}
       </div>
