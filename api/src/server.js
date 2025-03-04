@@ -12,6 +12,7 @@ const { connectPinecone } = require('./lib/pinecone');
 const profileRoutes = require('./routes/profileRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const profileProjectsRoutes = require('./routes/profileProjectsRoutes');
+const pagesRoutes = require('./routes/pagesRoutes');
 
 // Initialize Express app
 const app = express();
@@ -31,6 +32,7 @@ app.use('/api/documents', documentsRoutes);
 app.use('/api/profiles', profileRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/profiles/:profileId/projects', profileProjectsRoutes);
+app.use('/pages/', pagesRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
