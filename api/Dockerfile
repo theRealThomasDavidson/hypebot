@@ -8,9 +8,12 @@ COPY package.json ./package.json
 # Install dependencies
 RUN npm install
 
-# Copy only the src directory for the application code
+# Copy application code and static files
 COPY src/ ./src/
 COPY .env ./.env
+
+# Ensure pages directory exists and has correct permissions
+RUN mkdir -p ./src/pages && chmod 755 ./src/pages
 
 # Expose port
 EXPOSE 3000
