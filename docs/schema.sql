@@ -1,5 +1,7 @@
--- Enable pgvector extension
-CREATE EXTENSION IF NOT EXISTS vector;
+-- Drop all tables and extensions
+DROP TABLE IF EXISTS projects CASCADE;
+DROP TABLE IF EXISTS profiles CASCADE;
+DROP TABLE IF EXISTS documents CASCADE;
 
 -- Create the projects table
 CREATE TABLE projects (
@@ -33,25 +35,12 @@ CREATE TABLE profiles (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS documents (
-    id SERIAL PRIMARY KEY,
-    text TEXT NOT NULL,
-    profile_id UUID,
-    embedding vector(1536)  -- Adjust dimension based on your embedding model
-);
-
 -- Add the foreign key constraint after both tables exist
 ALTER TABLE projects 
 ADD CONSTRAINT fk_profile 
 FOREIGN KEY (profile_id) REFERENCES profiles(id) 
 ON DELETE CASCADE;
 
-ALTER TABLE documents
-ADD CONSTRAINT fk_profile
-FOREIGN KEY (profile_id) REFERENCES profiles(id)
-ON DELETE CASCADE;
-
 -- Create indexes for performance
 CREATE INDEX idx_projects_profile_id ON projects(profile_id);
 CREATE INDEX idx_profiles_name ON profiles(name);
-CREATE INDEX idx_documents_profile_id ON documents(profile_id);
