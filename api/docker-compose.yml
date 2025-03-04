@@ -1,10 +1,10 @@
 services:
   backend:
     build: .
-    container_name: profile-backend
+    container_name: hypebot-backend
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=development
       - PORT=3000
-    restart: unless-stopped 
+    restart: unless-stopped
