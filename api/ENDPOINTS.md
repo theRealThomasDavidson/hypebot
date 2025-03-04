@@ -21,6 +21,13 @@ This document provides comprehensive information about all available API endpoin
       - [POST /api/profiles](#post-apiprofiles)
       - [PUT /api/profiles/:id](#put-apiprofilesid)
       - [DELETE /api/profiles/:id](#delete-apiprofilesid)
+    - [Projects](#projects)
+      - [GET /api/projects](#get-apiprojects)
+      - [GET /api/projects/:id](#get-apiprojectsid)
+      - [GET /api/profiles/:profileId/projects](#get-apiprofilesprofileidprojects)
+      - [POST /api/projects](#post-apiprojects)
+      - [PUT /api/projects/:id](#put-apiprojectsid)
+      - [DELETE /api/projects/:id](#delete-apiprojectsid)
   - [Adding New Endpoint Documentation](#adding-new-endpoint-documentation)
 
 ## Overview
@@ -302,6 +309,277 @@ Delete a profile.
 
 **Error Responses:**
 - `404 Not Found`: If the profile with the specified ID does not exist
+
+### Projects
+
+#### GET /api/projects
+
+Retrieve a list of all projects.
+
+**Parameters:**
+- None
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "title": "Project Title",
+      "description": "Project description...",
+      "video_url": "https://example.com/video.mp4",
+      "screenshot_url": "https://example.com/screenshot.jpg",
+      "techs": [
+        "tech1",
+        "tech2",
+        "tech3"
+      ],
+      "keywords": [
+        "keyword1",
+        "keyword2",
+        "keyword3"
+      ],
+      "github_url": "https://github.com/user/project",
+      "deploy_url": "https://project-demo.com",
+      "profile_id": "uuid",
+      "created_at": "2002-08-08T00:00:00.000Z",
+      "updated_at": "2002-08-08T00:00:00.000Z"
+    },
+    // More projects...
+  ],
+  "message": "Projects retrieved successfully"
+}
+```
+
+#### GET /api/projects/:id
+
+Retrieve a specific project by ID.
+
+**Parameters:**
+- `id` (path parameter, required): The UUID of the project to retrieve
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "title": "Project Title",
+    "description": "Project description...",
+    "video_url": "https://example.com/video.mp4",
+    "screenshot_url": "https://example.com/screenshot.jpg",
+    "techs": [
+      "tech1",
+      "tech2",
+      "tech3"
+    ],
+    "keywords": [
+      "keyword1",
+      "keyword2",
+      "keyword3"
+    ],
+    "github_url": "https://github.com/user/project",
+    "deploy_url": "https://project-demo.com",
+    "profile_id": "uuid",
+    "created_at": "2002-08-08T00:00:00.000Z",
+    "updated_at": "2002-08-08T00:00:00.000Z",
+    "profile": {
+      "id": "uuid",
+      "name": "Challenger Name"
+      // Limited profile information
+    }
+  },
+  "message": "Project retrieved successfully"
+}
+```
+
+**Error Responses:**
+- `404 Not Found`: If the project with the specified ID does not exist
+
+#### GET /api/profiles/:profileId/projects
+
+Retrieve all projects for a specific profile.
+
+**Parameters:**
+- `profileId` (path parameter, required): The UUID of the profile to retrieve projects for
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "title": "Project Title",
+      "description": "Project description...",
+      "video_url": "https://example.com/video.mp4",
+      "screenshot_url": "https://example.com/screenshot.jpg",
+      "techs": [
+        "tech1",
+        "tech2",
+        "tech3"
+      ],
+      "keywords": [
+        "keyword1",
+        "keyword2",
+        "keyword3"
+      ],
+      "github_url": "https://github.com/user/project",
+      "deploy_url": "https://project-demo.com",
+      "profile_id": "uuid",
+      "created_at": "2002-08-08T00:00:00.000Z",
+      "updated_at": "2002-08-08T00:00:00.000Z"
+    },
+    // More projects...
+  ],
+  "message": "Profile projects retrieved successfully"
+}
+```
+
+**Error Responses:**
+- `404 Not Found`: If the profile with the specified ID does not exist
+
+#### POST /api/projects
+
+Create a new project.
+
+**Request Body:**
+```json
+{
+  "title": "Project Title",
+  "description": "Project description...",
+  "video_url": "https://example.com/video.mp4",
+  "screenshot_url": "https://example.com/screenshot.jpg",
+  "techs": ["tech1", "tech2", "tech3"],
+  "keywords": ["keyword1", "keyword2", "keyword3"],
+  "github_url": "https://github.com/user/project",
+  "deploy_url": "https://project-demo.com",
+  "profile_id": "uuid"
+}
+```
+
+**Required Fields:**
+- `title` (string): The project title
+- `description` (string): A detailed description of the project
+- `profile_id` (string): The UUID of the profile this project belongs to
+
+**Optional Fields:**
+- `video_url` (string): The URL to a video demonstration
+- `screenshot_url` (string): The URL to a screenshot image
+- `techs` (array of strings): List of technologies used in the project (max 5)
+- `keywords` (array of strings): List of keywords for the project (max 5)
+- `github_url` (string): The URL to the project's GitHub repository
+- `deploy_url` (string): The URL to the deployed project
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "title": "Project Title",
+    "description": "Project description...",
+    "video_url": "https://example.com/video.mp4",
+    "screenshot_url": "https://example.com/screenshot.jpg",
+    "techs": [
+      "tech1",
+      "tech2",
+      "tech3"
+    ],
+    "keywords": [
+      "keyword1",
+      "keyword2",
+      "keyword3"
+    ],
+    "github_url": "https://github.com/user/project",
+    "deploy_url": "https://project-demo.com",
+    "profile_id": "uuid",
+    "created_at": "2002-08-08T00:00:00.000Z",
+    "updated_at": "2002-08-08T00:00:00.000Z"
+  },
+  "message": "Project created successfully"
+}
+```
+
+**Error Responses:**
+- `400 Bad Request`: If the request body is missing required fields or contains invalid data
+- `404 Not Found`: If the profile with the specified ID does not exist
+
+#### PUT /api/projects/:id
+
+Update an existing project.
+
+**Parameters:**
+- `id` (path parameter, required): The UUID of the project to update
+
+**Request Body:**
+```json
+{
+  "title": "Updated Project Title",
+  "description": "Updated project description...",
+  "techs": ["tech1", "tech2", "tech4"],
+  "keywords": ["keyword1", "keyword2", "keyword4"]
+}
+```
+
+**Optional Fields:**
+All fields are optional for updates. Only include the fields you want to update.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "title": "Updated Project Title",
+    "description": "Updated project description...",
+    "video_url": "https://example.com/video.mp4",
+    "screenshot_url": "https://example.com/screenshot.jpg",
+    "techs": [
+      "tech1",
+      "tech2",
+      "tech4"
+    ],
+    "keywords": [
+      "keyword1",
+      "keyword2",
+      "keyword4"
+    ],
+    "github_url": "https://github.com/user/project",
+    "deploy_url": "https://project-demo.com",
+    "profile_id": "uuid",
+    "created_at": "2002-08-08T00:00:00.000Z",
+    "updated_at": "2002-08-08T00:00:00.000Z"
+  },
+  "message": "Project updated successfully"
+}
+```
+
+**Error Responses:**
+- `400 Bad Request`: If the request body contains invalid data
+- `404 Not Found`: If the project with the specified ID does not exist
+
+#### DELETE /api/projects/:id
+
+Delete a project.
+
+**Parameters:**
+- `id` (path parameter, required): The UUID of the project to delete
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid"
+  },
+  "message": "Project deleted successfully"
+}
+```
+
+**Error Responses:**
+- `404 Not Found`: If the project with the specified ID does not exist
 
 ## Adding New Endpoint Documentation
 
