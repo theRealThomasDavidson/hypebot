@@ -1,5 +1,5 @@
 const { OpenAI } = require('openai');
-const pinecone = require('../pinecone');
+const pinecone = require('../lib/pinecone');
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -24,18 +24,6 @@ async function generateEmbedding(text) {
         console.error('Error generating embedding:', error);
         throw error;
     }
-}
-
-/**
- * Health check endpoint
- * @param {import('express').Request} req 
- * @param {import('express').Response} res 
- */
-async function healthCheck(req, res) {
-    res.json({
-        status: 'healthy',
-        timestamp: new Date().toISOString()
-    });
 }
 
 /**

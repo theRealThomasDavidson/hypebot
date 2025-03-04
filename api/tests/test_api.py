@@ -17,15 +17,15 @@ test_docs = [
 
 # Test queries designed to match the test documents
 test_queries = [
-    "Need a React developer for frontend work",
+    "JavaScript developer with 5 years of experience in React, Node.js, and frontend development",
     "Looking for someone with machine learning and NLP experience",
     "Need a mobile app designer who knows Figma",
     "Cloud infrastructure expert with AWS knowledge",
     "Web application developer with JavaScript skills"
 ]
 
-# Test profile IDs
-test_profile_ids = [f"test_profile_{i+1}" for i in range(5)]
+# Test user IDs
+test_user_ids = [f"test_user_{i+1}" for i in range(5)]
 
 # Document IDs created during the test
 doc_ids = []
@@ -62,22 +62,24 @@ def create_test_vectors():
     
     success_count = 0
     
-    for i, (doc, profile_id) in enumerate(zip(test_docs, test_profile_ids)):
+    for i, (doc, user_id) in enumerate(zip(test_docs, test_user_ids)):
         print(f"ℹ Creating vector {i+1}/{len(test_docs)}: '{doc[:50]}...'")
         try:
             response = requests.post(
-                f"{API_URL}/api/vectors",
-                json={"text": doc, "profileId": profile_id}
+                f"{API_URL}/api/documents",
+                json={"text": doc, "userId": user_id, "metadata": {"source": "test"}}
             )
             
             if response.status_code == 201:
                 data = response.json()
-                doc_id = data.get('data', {}).get('id')
+                doc_id = data.get('documentId')
                 doc_ids.append(doc_id)
                 print(f"✓ Created vector with ID: {doc_id}")
                 success_count += 1
             else:
                 print(f"✗ Failed to create vector: {response.status_code}")
+                if response.text:
+                    print(f"  Error: {response.text}")
                 print("⚠ Failed to create vector")
         except Exception as e:
             print(f"✗ Exception: {str(e)}")
@@ -92,7 +94,7 @@ def create_test_vectors():
         return False
     
     # Give a moment for vectors to be indexed if needed
-    print("ℹ Waiting for vectors to be indexed...")
+    print("ℹ Waiting for vectors to be indexed (3 minutes)...")
     time.sleep(1)
     
     return True
@@ -104,24 +106,26 @@ def search_vectors():
         print(f"ℹ Query {i+1}/{len(test_queries)}: '{query}'")
         try:
             response = requests.get(
-                f"{API_URL}/api/vectors/search",
-                params={"query": query}
+                f"{API_URL}/api/documents/search",
+                params={"query": query, "threshold": 0.45}
             )
             
             if response.status_code == 200:
                 data = response.json()
-                results = data.get('data', [])
+                results = data.get('results', [])
                 print(f"✓ Found {len(results)} results")
                 
                 # Display result details if any found
                 if results:
                     for j, result in enumerate(results):
-                        similarity = result.get('similarity', 0)
+                        score = result.get('score', 0)
                         text = result.get('text', '')[:50] + '...'
-                        print(f"  Result {j+1}: [{similarity:.4f}] {text}")
+                        print(f"  Result {j+1}: [{score:.4f}] {text}")
                     print()
             else:
                 print(f"✗ Search failed: {response.status_code}")
+                if response.text:
+                    print(f"  Error: {response.text}")
         except Exception as e:
             print(f"✗ Exception: {str(e)}")
         
@@ -133,12 +137,14 @@ def delete_test_vectors():
     for i, doc_id in enumerate(doc_ids):
         print(f"ℹ Deleting vector {i+1}/{len(doc_ids)}: ID {doc_id}")
         try:
-            response = requests.delete(f"{API_URL}/api/vectors/{doc_id}")
+            response = requests.delete(f"{API_URL}/api/documents/{doc_id}")
             
             if response.status_code == 200:
                 print(f"✓ Deleted vector with ID: {doc_id}")
             else:
                 print(f"✗ Failed to delete vector: {response.status_code}")
+                if response.text:
+                    print(f"  Error: {response.text}")
         except Exception as e:
             print(f"✗ Exception: {str(e)}")
 

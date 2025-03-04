@@ -4,8 +4,37 @@
  * Handles API requests for document operations with Pinecone
  */
 
-const { storeDocument, semanticSearch } = require('../semantic_search');
-const { deleteVectors, deleteVectorsByFilter } = require('../pinecone_operations');
+const pineconeModule = require('../lib/pinecone');
+const { OpenAI } = require('openai');
+
+// Initialize OpenAI client for embeddings
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+/**
+ * Generate embedding from text using OpenAI
+ * @param {string} text - Text to generate embedding for
+ * @returns {Promise<Array<number>>} Embedding vector
+ */
+async function generateEmbedding(text) {
+  if (!text) {
+    throw new Error('Text is required');
+  }
+
+  try {
+    const response = await openai.embeddings.create({
+      model: "text-embedding-3-small",
+      input: text,
+      encoding_format: "float"
+    });
+    
+    return response.data[0].embedding;
+  } catch (error) {
+    console.error('Error generating embedding:', error);
+    throw error;
+  }
+}
 
 /**
  * Store a document with its embedding
@@ -24,15 +53,16 @@ const createDocument = async (req, res) => {
       return res.status(400).json({ error: 'User ID is required' });
     }
     
-    const result = await storeDocument({
-      text,
-      userId,
-      metadata
-    });
+    // Generate embedding
+    console.log(`Generating embedding for: "${text.substring(0, 30)}..."`);
+    const embedding = await generateEmbedding(text);
+    
+    // Store the vector in Pinecone
+    const id = await pineconeModule.storeDocumentWithEmbedding(text, userId, embedding, metadata);
     
     res.status(201).json({
       success: true,
-      documentId: result.id,
+      documentId: id,
       message: 'Document stored successfully'
     });
   } catch (error) {
@@ -51,21 +81,25 @@ const createDocument = async (req, res) => {
  */
 const searchDocuments = async (req, res) => {
   try {
-    const { query, limit = 5, threshold = 0.7, userId } = req.query;
+    const { query, limit = 5, threshold = 0.4, userId } = req.query;
     
     if (!query) {
       return res.status(400).json({ error: 'Search query is required' });
     }
     
-    // Prepare filter if userId is provided
+    // Generate embedding for the query
+    const queryEmbedding = await generateEmbedding(query);
+    
+    // Set up filter if userId is provided
     const filter = userId ? { userId } : {};
     
-    const results = await semanticSearch({
-      query,
-      limit: parseInt(limit, 10),
-      threshold: parseFloat(threshold),
+    // Search for similar documents
+    const results = await pineconeModule.searchSimilarDocuments(
+      queryEmbedding, 
+      parseInt(limit, 10), 
+      parseFloat(threshold),
       filter
-    });
+    );
     
     res.json({
       success: true,
@@ -94,7 +128,7 @@ const deleteDocument = async (req, res) => {
       return res.status(400).json({ error: 'Document ID is required' });
     }
     
-    await deleteVectors([id]);
+    await pineconeModule.deleteDocument(id);
     
     res.json({
       success: true,
@@ -122,7 +156,7 @@ const deleteUserDocuments = async (req, res) => {
       return res.status(400).json({ error: 'User ID is required' });
     }
     
-    await deleteVectorsByFilter({ userId });
+    await pineconeModule.deleteUserDocuments(userId);
     
     res.json({
       success: true,

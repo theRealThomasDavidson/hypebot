@@ -39,12 +39,10 @@ This is the API backend for the semantic search application. It provides endpoin
 
 1. Create a Pinecone account at [pinecone.io](https://www.pinecone.io/)
 2. Obtain your API key from the Pinecone dashboard
-3. Note your Pinecone environment (e.g., "us-east-1", "gcp-starter")
-4. Create an index (or use our setup script - see below)
-5. Add your Pinecone credentials to the `.env` file:
+3. Create an index (or use our setup script - see below)
+4. Add your Pinecone credentials to the `.env` file:
    ```
    PINECONE_API_KEY=your_api_key
-   PINECONE_ENVIRONMENT=your_environment
    PINECONE_INDEX=your_index_name
    ```
 
@@ -134,10 +132,9 @@ npm test
 If you encounter issues with Pinecone:
 
 1. Check your API key and index name
-2. Check your Pinecone environment setting
-3. Verify network connectivity
-4. Run the test script for diagnostics
-5. Check the Pinecone status page
+2. Verify network connectivity
+3. Run the test script for diagnostics
+4. Check the Pinecone status page
 
 For more detailed instructions on Pinecone setup, see the [README-PINECONE.md](../README-PINECONE.md) file.
 

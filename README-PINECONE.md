@@ -9,7 +9,6 @@ This project uses Pinecone as a vector database for semantic search capabilities
 1. Go to [Pinecone](https://www.pinecone.io/) and sign up for an account.
 2. Once registered, navigate to the API Keys section and create a new API key.
 3. Copy the API key for use in your environment variables.
-4. Note your environment (e.g., "us-east-1", "gcp-starter") from the Pinecone dashboard.
 
 ### 2. Create a Pinecone Index
 
@@ -42,7 +41,6 @@ node api/src/setup_pinecone.js create-index
    ```
    OPENAI_API_KEY=your_openai_api_key
    PINECONE_API_KEY=your_pinecone_api_key
-   PINECONE_ENVIRONMENT=your_pinecone_environment (e.g., us-east-1, gcp-starter)
    PINECONE_INDEX=your_index_name
    ```
 
@@ -123,7 +121,6 @@ If you encounter connection issues:
 2. Check if your index exists using the dashboard
 3. Ensure you're not hitting rate limits
 4. Verify network connectivity to Pinecone servers
-5. Make sure your PINECONE_ENVIRONMENT variable is set correctly
 
 ## Additional Resources
 
