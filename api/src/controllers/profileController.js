@@ -13,10 +13,21 @@ async function getAllProfiles(req, res) {
 
         if (error) throw error;
 
-        res.json(data);
+        res.json({
+            success: true,
+            data: data,
+            message: "Profiles retrieved successfully"
+        });
     } catch (error) {
         console.error('Error fetching profiles:', error);
-        res.status(500).json({ error: 'Failed to fetch profiles' });
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch profiles',
+            error: {
+                code: 'SERVER_ERROR',
+                details: error
+            }
+        });
     }
 }
 
@@ -37,13 +48,31 @@ async function getProfileById(req, res) {
 
         if (error) throw error;
         if (!data) {
-            return res.status(404).json({ error: 'Profile not found' });
+            return res.status(404).json({
+                success: false,
+                message: 'Profile not found',
+                error: {
+                    code: 'RESOURCE_NOT_FOUND',
+                    details: { id }
+                }
+            });
         }
 
-        res.json(data);
+        res.json({
+            success: true,
+            data: data,
+            message: "Profile retrieved successfully"
+        });
     } catch (error) {
         console.error('Error fetching profile:', error);
-        res.status(500).json({ error: 'Failed to fetch profile' });
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch profile',
+            error: {
+                code: 'SERVER_ERROR',
+                details: error
+            }
+        });
     }
 }
 
@@ -67,16 +96,30 @@ async function createProfile(req, res) {
 
     try {
         // Validate required fields
-        if (!name || !blurb || !bio || !skills) {
+        if (!name || !blurb || !bio) {
             return res.status(400).json({
-                error: 'Missing required fields: name, blurb, bio, and skills are required'
+                success: false,
+                message: 'Missing required fields',
+                error: {
+                    code: 'INVALID_REQUEST',
+                    details: {
+                        message: 'name, blurb, and bio are required'
+                    }
+                }
             });
         }
 
-        // Validate skills array length
-        if (!Array.isArray(skills) || skills.length > 3) {
+        // Validate skills array if provided
+        if (skills && (!Array.isArray(skills))) {
             return res.status(400).json({
-                error: 'Skills must be an array with maximum 3 items'
+                success: false,
+                message: 'Invalid data format',
+                error: {
+                    code: 'INVALID_REQUEST',
+                    details: {
+                        message: 'Skills must be an array'
+                    }
+                }
             });
         }
 
@@ -98,10 +141,21 @@ async function createProfile(req, res) {
 
         if (error) throw error;
 
-        res.status(201).json(data);
+        res.status(201).json({
+            success: true,
+            data: data,
+            message: "Profile created successfully"
+        });
     } catch (error) {
         console.error('Error creating profile:', error);
-        res.status(500).json({ error: 'Failed to create profile' });
+        res.status(500).json({
+            success: false,
+            message: 'Failed to create profile',
+            error: {
+                code: 'SERVER_ERROR',
+                details: error
+            }
+        });
     }
 }
 
@@ -125,10 +179,17 @@ async function updateProfile(req, res) {
     } = req.body;
 
     try {
-        // Validate skills array length if provided
-        if (skills && (!Array.isArray(skills) || skills.length > 3)) {
+        // Validate skills array if provided
+        if (skills && (!Array.isArray(skills))) {
             return res.status(400).json({
-                error: 'Skills must be an array with maximum 3 items'
+                success: false,
+                message: 'Invalid data format',
+                error: {
+                    code: 'INVALID_REQUEST',
+                    details: {
+                        message: 'Skills must be an array'
+                    }
+                }
             });
         }
 
@@ -152,13 +213,31 @@ async function updateProfile(req, res) {
 
         if (error) throw error;
         if (!data) {
-            return res.status(404).json({ error: 'Profile not found' });
+            return res.status(404).json({
+                success: false,
+                message: 'Profile not found',
+                error: {
+                    code: 'RESOURCE_NOT_FOUND',
+                    details: { id }
+                }
+            });
         }
 
-        res.json(data);
+        res.json({
+            success: true,
+            data: data,
+            message: "Profile updated successfully"
+        });
     } catch (error) {
         console.error('Error updating profile:', error);
-        res.status(500).json({ error: 'Failed to update profile' });
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update profile',
+            error: {
+                code: 'SERVER_ERROR',
+                details: error
+            }
+        });
     }
 }
 
@@ -171,6 +250,24 @@ async function deleteProfile(req, res) {
     const { id } = req.params;
 
     try {
+        // Check if profile exists before deleting
+        const { data: profile, error: fetchError } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', id)
+            .single();
+
+        if (fetchError || !profile) {
+            return res.status(404).json({
+                success: false,
+                message: 'Profile not found',
+                error: {
+                    code: 'RESOURCE_NOT_FOUND',
+                    details: { id }
+                }
+            });
+        }
+
         const { error } = await supabase
             .from('profiles')
             .delete()
@@ -178,10 +275,23 @@ async function deleteProfile(req, res) {
 
         if (error) throw error;
 
-        res.status(204).send();
+        res.json({
+            success: true,
+            data: {
+                id: id
+            },
+            message: "Profile deleted successfully"
+        });
     } catch (error) {
         console.error('Error deleting profile:', error);
-        res.status(500).json({ error: 'Failed to delete profile' });
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete profile',
+            error: {
+                code: 'SERVER_ERROR',
+                details: error
+            }
+        });
     }
 }
 
