@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const profileRoutes = require('./routes/profileRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const profileProjectsRoutes = require('./routes/profileProjectsRoutes');
 
 // Create Express app
 const app = express();
@@ -17,6 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/profiles', profileRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/profiles/:profileId/projects', profileProjectsRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
