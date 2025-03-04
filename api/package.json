@@ -7,6 +7,9 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:coverage-report": "jest --coverage --coverageReporters='text-summary' --coverageReporters='html'",
     "test-api": "node src/test_api.js"
   },
   "dependencies": {

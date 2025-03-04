@@ -75,3 +75,10 @@ pids
 # OS files
 .DS_Store
 Thumbs.db
+
+/api/coverage
+./api/node_modules
+./api/dist
+./api/build
+./api/.env
+./api/.env.local
