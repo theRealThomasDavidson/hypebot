@@ -24,10 +24,16 @@ Backend API for student profile cards project with Express.js and Docker.
 2. Run Docker Compose to start the server:
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 The server will be available at http://localhost:3000 with hot reloading enabled.
+
+3. Stop the server:
+
+```bash
+docker compose down
+```
 
 ### Local Development (without Docker)
 
@@ -45,19 +51,20 @@ npm run dev
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/profiles` | Get all profiles |
-| GET | `/api/profiles/:id` | Get a specific profile by ID |
-| GET | `/api/profiles/search?query=keyword` | Search profiles by keyword |
+| Method | Endpoint            | Description                  |
+| ------ | ------------------- | ---------------------------- |
+| GET    | `/api/profiles`     | Get all profiles             |
+| GET    | `/api/profiles/:id` | Get a specific profile by ID |
+| POST   | `/api/profiles`     | Create a new profile         |
+| PUT    | `/api/profiles/:id` | Update a profile by ID       |
+| DELETE | `/api/profiles/:id` | Delete a profile by ID       |
 
 ## Environment Variables
 
-Create a `.env` file in the root directory to customize configuration:
+Create a `.env` file in the `api` directory to customize configuration:
 
-```
-PORT=3000
-NODE_ENV=development
+```bash
+cp .env.example .env
 ```
 
 ## Frontend Integration
@@ -83,10 +90,15 @@ fetch('http://localhost:3000/api/profiles')
 ├── Dockerfile          # Docker configuration
 ├── docker-compose.yml  # Docker Compose setup
 ├── package.json        # Dependencies and scripts
+├── .env                # Environment variables
 ├── src/                # Source code
 │   ├── server.js       # Express server setup
-│   └── data/           # Sample data
-│       └── profiles.js # Profile data and generator
+│   └── routes/         # API routes
+│       └── profiles.js # Profile routes
+│   └── controllers/    # Controller functions
+│       └── profiles.js # Profile controller
+│   └── lib/            # Utility functions
+│       └── supabase.js # Supabase client
 └── README.md           # Documentation
 ```
 
