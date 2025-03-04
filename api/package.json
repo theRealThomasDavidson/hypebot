@@ -1,20 +1,29 @@
 {
-  "name": "profile-backend",
+  "name": "gauntlet-api",
   "version": "1.0.0",
-  "description": "Backend API for student profile cards",
+  "description": "Gauntlet API",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test-api": "node src/test_api.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "openai": "^4.20.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
-  }
-} 
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "author": "Harmony Morse, Thomas Davidson, Claude"
+}

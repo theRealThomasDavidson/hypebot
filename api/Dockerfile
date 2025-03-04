@@ -10,6 +10,7 @@ RUN npm install
 
 # Copy only the src directory for the application code
 COPY src/ ./src/
+COPY .env ./.env
 
 # Expose port
 EXPOSE 3000
