@@ -65,6 +65,19 @@ async function getProfileById(req, res) {
         });
     } catch (error) {
         console.error('Error fetching profile:', error);
+
+        // Check for PGRST116 error (Resource not found)
+        if (error && error.code === 'PGRST116') {
+            return res.status(404).json({
+                success: false,
+                message: 'Profile not found',
+                error: {
+                    code: 'NOT_FOUND',
+                    details: { id }
+                }
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: 'Failed to fetch profile',
@@ -230,6 +243,19 @@ async function updateProfile(req, res) {
         });
     } catch (error) {
         console.error('Error updating profile:', error);
+
+        // Check for PGRST116 error (Resource not found)
+        if (error && error.code === 'PGRST116') {
+            return res.status(404).json({
+                success: false,
+                message: 'Profile not found',
+                error: {
+                    code: 'NOT_FOUND',
+                    details: { id }
+                }
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: 'Failed to update profile',
@@ -284,6 +310,19 @@ async function deleteProfile(req, res) {
         });
     } catch (error) {
         console.error('Error deleting profile:', error);
+
+        // Check for PGRST116 error (Resource not found)
+        if (error && error.code === 'PGRST116') {
+            return res.status(404).json({
+                success: false,
+                message: 'Profile not found',
+                error: {
+                    code: 'NOT_FOUND',
+                    details: { id }
+                }
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: 'Failed to delete profile',
