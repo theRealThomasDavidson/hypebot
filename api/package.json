@@ -1,26 +1,31 @@
 {
-  "name": "semantic-search-api",
+  "name": "gauntlet-api",
   "version": "1.0.0",
-  "description": "Semantic search API with Pinecone vector database",
+  "description": "Gauntlet API",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "jest"
+    "test": "jest",
+    "test-api": "node src/test_api.js"
   },
   "dependencies": {
     "@pinecone-database/pinecone": "^5.1.0",
+    "@supabase/supabase-js": "^2.49.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "morgan": "^1.10.0",
     "openai": "^4.17.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3"
   },
   "engines": {
-    "node": ">=16.0.0"
-  }
+    "node": ">=14.0.0"
+  },
+  "author": "Harmony Morse, Thomas Davidson, Claude"
 }
