@@ -1,107 +1,146 @@
-# Profile Cards Backend
+# API Backend
 
-Backend API for student profile cards project with Express.js and Docker.
+This is the API backend for the semantic search application. It provides endpoints for storing, searching, and managing documents with vector embeddings.
 
-## Features
+## Technologies
 
-- Express.js RESTful API
-- Docker containerization
-- Hot reloading for fast development
-- Sample data with 100 student profiles
-- Search and filter capabilities
-- CORS enabled for frontend integration
+- Node.js
+- Express
+- OpenAI API for embeddings
+- Pinecone for vector storage and similarity search
 
-## Prerequisites
+## Setup Instructions
 
-- Docker and Docker Compose installed on your machine
-- Node.js and npm (for local development outside Docker)
+### Prerequisites
 
-## Quick Start
+- Node.js (v16+)
+- npm or yarn
+- OpenAI API key
+- Pinecone account and API key
 
-### Using Docker (Recommended)
+### Installation
 
-1. Clone this repository
-2. Run Docker Compose to start the server:
+1. Clone the repository
+2. Navigate to the API directory:
+   ```bash
+   cd api
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Copy the environment variables example file:
+   ```bash
+   cp .env.example .env
+   ```
+5. Update the `.env` file with your API keys and configuration.
+
+### Pinecone Setup
+
+1. Create a Pinecone account at [pinecone.io](https://www.pinecone.io/)
+2. Obtain your API key from the Pinecone dashboard
+3. Note your Pinecone environment (e.g., "us-east-1", "gcp-starter")
+4. Create an index (or use our setup script - see below)
+5. Add your Pinecone credentials to the `.env` file:
+   ```
+   PINECONE_API_KEY=your_api_key
+   PINECONE_ENVIRONMENT=your_environment
+   PINECONE_INDEX=your_index_name
+   ```
+
+#### Using the Pinecone Setup Script
+
+We provide a setup script to help manage your Pinecone indexes:
 
 ```bash
-docker compose up
+# List all indexes
+node src/setup_pinecone.js list
+
+# Describe an index
+node src/setup_pinecone.js describe your_index_name
+
+# Create a new index
+node src/setup_pinecone.js create-index
+
+# Delete an index
+node src/setup_pinecone.js delete-index your_index_name
 ```
 
-The server will be available at http://localhost:3000 with hot reloading enabled.
+### Test Your Setup
 
-3. Stop the server:
+Run the test script to verify your Pinecone and OpenAI setup:
 
 ```bash
-docker compose down
+node src/test_pinecone.js
 ```
 
-### Local Development (without Docker)
+## Running the Server
 
-1. Install dependencies:
-
-```bash
-npm install
-```
-
-2. Start the development server:
+Start the server in development mode:
 
 ```bash
 npm run dev
 ```
 
-## API Endpoints
-
-| Method | Endpoint            | Description                  |
-| ------ | ------------------- | ---------------------------- |
-| GET    | `/api/profiles`     | Get all profiles             |
-| GET    | `/api/profiles/:id` | Get a specific profile by ID |
-| POST   | `/api/profiles`     | Create a new profile         |
-| PUT    | `/api/profiles/:id` | Update a profile by ID       |
-| DELETE | `/api/profiles/:id` | Delete a profile by ID       |
-
-## Environment Variables
-
-Create a `.env` file in the `api` directory to customize configuration:
+Or in production mode:
 
 ```bash
-cp .env.example .env
+npm start
 ```
 
-## Frontend Integration
+## API Endpoints
 
-To connect the frontend to this API, update your fetch calls to use the appropriate endpoints:
+The server exposes the following endpoints:
 
-```javascript
-// Example: Fetching all profiles
-fetch('http://localhost:3000/api/profiles')
-  .then(response => response.json())
-  .then(data => {
-    // Use data.data to access the profiles array
-    const profiles = data.data;
-    displayProfiles(profiles);
-  })
-  .catch(error => console.error('Error fetching profiles:', error));
-```
-
-## Structure
-
-```
-.
-├── Dockerfile          # Docker configuration
-├── docker-compose.yml  # Docker Compose setup
-├── package.json        # Dependencies and scripts
-├── .env                # Environment variables
-├── src/                # Source code
-│   ├── server.js       # Express server setup
-│   └── routes/         # API routes
-│       └── profiles.js # Profile routes
-│   └── controllers/    # Controller functions
-│       └── profiles.js # Profile controller
-│   └── lib/            # Utility functions
-│       └── supabase.js # Supabase client
-└── README.md           # Documentation
-```
+- `POST /api/documents` - Store a document with its vector embedding
+- `GET /api/search` - Perform semantic search
+- `DELETE /api/documents/:id` - Delete a document
+- `DELETE /api/users/:userId/documents` - Delete all documents for a user
 
 ## Development
 
-The server uses nodemon for automatic restarts when you make changes. Edit files in the `src` directory and the server will automatically restart to reflect your changes. 
+### Project Structure
+
+```
+api/
+├── src/             # Source code
+│   ├── controllers/ # Controller functions for routes
+│   ├── routes/      # API route definitions
+│   ├── lib/         # Utility libraries
+│   ├── pinecone_client.js        # Pinecone client setup
+│   ├── pinecone_index.js         # Index management
+│   ├── pinecone_operations.js    # Vector operations
+│   ├── semantic_search.js        # OpenAI embedding integration
+│   ├── setup_pinecone.js         # Pinecone setup script
+│   ├── test_pinecone.js          # Test script
+│   └── server.js    # Express server entry point
+├── tests/           # Test files
+├── .env.example     # Example environment variables
+├── .env             # Environment variables (git-ignored)
+├── package.json     # Dependencies and scripts
+└── README.md        # This file
+```
+
+### Testing
+
+Run the tests with:
+
+```bash
+npm test
+```
+
+## Troubleshooting
+
+If you encounter issues with Pinecone:
+
+1. Check your API key and index name
+2. Check your Pinecone environment setting
+3. Verify network connectivity
+4. Run the test script for diagnostics
+5. Check the Pinecone status page
+
+For more detailed instructions on Pinecone setup, see the [README-PINECONE.md](../README-PINECONE.md) file.
+
+## License
+
+This project is licensed under the MIT License. 

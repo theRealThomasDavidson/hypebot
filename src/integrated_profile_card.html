@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Profile Card</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --text-color: #333;
+            --light-gray: #f5f7fa;
+            --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .nav-links a {
+            margin-left: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-speed);
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background: var(--light-gray);
+            transition: background var(--transition-speed);
+        }
+
+        .social-links a:hover {
+            background: #e0e6ed;
+        }
+
+        .profile-main {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            padding: 0;
+        }
+
+        .profile-left {
+            padding: 20px;
+            border-right: 1px solid #eee;
+        }
+
+        .profile-pic-container {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 20px;
+            border: 3px solid var(--primary-color);
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .profile-title {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .left-section-container {
+            margin-top: 30px;
+        }
+
+        .left-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .left-skills-list {
+            list-style-type: none;
+            margin-bottom: 25px;
+        }
+
+        .left-skill-item {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .left-skill-item:last-child {
+            border-bottom: none;
+        }
+
+        .left-skill-icon {
+            color: var(--secondary-color);
+            margin-right: 10px;
+            font-size: 1rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #f0f8ff;
+        }
+
+        .left-skill-text {
+            font-size: 1rem;
+        }
+
+        .left-tags-container {
+            margin-top: 10px;
+        }
+
+        .left-tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .left-tag {
+            background: var(--light-gray);
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+
+        .profile-right {
+            padding: 20px;
+        }
+
+        .metadata-section {
+            margin-bottom: 25px;
+        }
+
+        .about-qr-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .about-section {
+            flex: 1;
+        }
+
+        .qr-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .qr-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+        }
+
+        .qr-code {
+            width: 120px;
+            height: 120px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        .qr-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .metadata-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .metadata-content {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .social-profiles {
+            margin-top: 20px;
+        }
+
+        .profile-switcher {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .profile-toggle-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color var(--transition-speed);
+        }
+
+        .profile-toggle-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .github-container, .linkedin-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .github-stats, .github-langs, .github-contrib-chart {
+            width: 100%;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .contrib-section h3 {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 992px) {
+            .about-qr-container {
+                flex-direction: column;
+            }
+            
+            .qr-container {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-main {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-left {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+
+            .profile-header {
+                justify-content: center;
+            }
+            
+            .qr-container {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-bar">
+            <div class="nav-title">Student Profiles</div>
+            <div class="nav-links">
+                <a href="profile_card.html">All Students</a>
+                <a href="#">Home</a>
+            </div>
+        </nav>
+
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="social-links">
+                    <a href="https://github.com/malibuwileyu" target="_blank">GitHub</a>
+                    <a href="https://www.linkedin.com/in/ryan-w-heron" target="_blank">LinkedIn</a>
+                </div>
+            </div>
+
+            <div class="profile-main">
+                <div class="profile-left">
+                    <div class="profile-pic-container">
+                        <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Profile Picture" class="profile-pic">
+                    </div>
+                    <h1 class="profile-name">Ryan Heron</h1>
+                    <div class="profile-title">Software Engineer</div>
+                    
+                    <!-- Top skills list in left column -->
+                    <div class="left-section-container">
+                        <h3 class="left-section-title">Top Skills</h3>
+                        <ul class="left-skills-list">
+                            <li class="left-skill-item">
+                                <span class="left-skill-icon">✓</span>
+                                <span class="left-skill-text">JavaScript</span>
+                            </li>
+                            <li class="left-skill-item">
+                                <span class="left-skill-icon">✓</span>
+                                <span class="left-skill-text">React</span>
+                            </li>
+                            <li class="left-skill-item">
+                                <span class="left-skill-icon">✓</span>
+                                <span class="left-skill-text">Python</span>
+                            </li>
+                            <li class="left-skill-item">
+                                <span class="left-skill-icon">✓</span>
+                                <span class="left-skill-text">Docker</span>
+                            </li>
+                            <li class="left-skill-item">
+                                <span class="left-skill-icon">✓</span>
+                                <span class="left-skill-text">AWS</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Project tags now in left column -->
+                    <div class="left-section-container">
+                        <h3 class="left-section-title">Project Tags</h3>
+                        <div class="left-tags-list">
+                            <span class="left-tag">Robotics</span>
+                            <span class="left-tag">React</span>
+                            <span class="left-tag">Amplify</span>
+                            <span class="left-tag">UI/UX</span>
+                            <span class="left-tag">Docker</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-right">
+                    <!-- About section and QR codes side by side -->
+                    <div class="about-qr-container">
+                        <div class="about-section">
+                            <h3 class="metadata-title">About</h3>
+                            <p class="metadata-content">
+                                Experienced software engineer specialized in building scalable web applications and robotics interfaces. 
+                                Currently working on advanced UI systems for robot control.
+                            </p>
+                        </div>
+                        
+                        <div class="qr-container">
+                            <div class="qr-item">
+                                <img id="github-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://github.com/malibuwileyu" alt="GitHub QR" class="qr-code">
+                                <div class="qr-label">GitHub</div>
+                            </div>
+                            <div class="qr-item">
+                                <img id="linkedin-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://www.linkedin.com/in/ryan-w-heron" alt="LinkedIn QR" class="qr-code">
+                                <div class="qr-label">LinkedIn</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Profiles Integration -->
+                    <div class="social-profiles">
+                        <div class="profile-switcher"
+                             data-linkedin-username="ryan-w-heron" 
+                             data-github-username="malibuwileyu"
+                             data-alt-linkedin-username="thomas-davidson-47581315b"
+                             data-alt-github-username="theRealThomasDavidson">
+                            <button id="profileToggle" class="profile-toggle-btn">Switch Profile</button>
+                            <span id="currentProfile">Current: Ryan Heron</span>
+                        </div>
+
+                        <div class="github-container">
+                            <div class="profile-section">
+                                <iframe
+                                    id="github-stats"
+                                    src="https://github-readme-stats.vercel.app/api?username=malibuwileyu&show_icons=true&theme=default"
+                                    frameborder="0"
+                                    scrolling="no"
+                                    width="100%"
+                                    height="200"
+                                    class="github-stats">
+                                </iframe>
+                            </div>
+                            <div class="contrib-section">
+                                <h3>Contribution Activity</h3>
+                                <img 
+                                    id="github-contrib"
+                                    src="https://ghchart.rshah.org/malibuwileyu" 
+                                    alt="GitHub Contribution Graph" 
+                                    class="github-contrib-chart">
+                            </div>
+                            <div class="repo-section">
+                                <iframe
+                                    id="github-langs"
+                                    src="https://github-readme-stats.vercel.app/api/top-langs/?username=malibuwileyu&layout=compact&theme=default"
+                                    frameborder="0"
+                                    scrolling="no"
+                                    width="100%"
+                                    height="150"
+                                    class="github-langs">
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <div class="linkedin-container">
+                            <div class="profile-section">
+                                <!-- LinkedIn badge will be dynamically inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LinkedIn Scripts -->
+    <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+    <script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
+
+    <!-- Profile Switching Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const switcherDiv = document.querySelector('.profile-switcher');
+            const toggleBtn = document.getElementById('profileToggle');
+            const currentProfileSpan = document.getElementById('currentProfile');
+            const profileName = document.querySelector('.profile-name');
+            const profileImage = document.querySelector('.profile-pic');
+            const githubQR = document.getElementById('github-qr');
+            const linkedinQR = document.getElementById('linkedin-qr');
+            const githubLink = document.querySelector('.social-links a:first-child');
+            const linkedinLink = document.querySelector('.social-links a:last-child');
+            
+            let isAltProfile = false;
+            
+            // Set initial LinkedIn username to match the data attribute
+            const initialLinkedinUsername = switcherDiv.getAttribute('data-linkedin-username');
+            const linkedinContainer = document.querySelector('.linkedin-container .profile-section');
+            linkedinContainer.innerHTML = `
+                <div 
+                    class="badge-base LI-profile-badge" 
+                    data-locale="en_US" 
+                    data-size="large" 
+                    data-theme="light" 
+                    data-type="HORIZONTAL" 
+                    data-vanity="${initialLinkedinUsername}" 
+                    data-version="v1">
+                </div>
+            `;
+            
+            // Initial setup after a slight delay to ensure LinkedIn API has loaded
+            setTimeout(function() {
+                updateProfiles();
+            }, 500);
+            
+            // Toggle button handler
+            toggleBtn.addEventListener('click', function() {
+                isAltProfile = !isAltProfile;
+                toggleBtn.disabled = true;
+                toggleBtn.textContent = "Switching...";
+                
+                // Show loading indication
+                currentProfileSpan.textContent = "Loading profile...";
+                
+                // Update profiles with a delay to show loading state
+                setTimeout(function() {
+                    updateProfiles();
+                    toggleBtn.disabled = false;
+                    toggleBtn.textContent = "Switch Profile";
+                }, 300);
+            });
+            
+            function updateProfiles() {
+                // Get the right set of usernames
+                const githubUsername = isAltProfile ? 
+                    switcherDiv.getAttribute('data-alt-github-username') : 
+                    switcherDiv.getAttribute('data-github-username');
+                
+                const linkedinUsername = isAltProfile ? 
+                    switcherDiv.getAttribute('data-alt-linkedin-username') : 
+                    switcherDiv.getAttribute('data-linkedin-username');
+                
+                // Update display name and profile details
+                if (isAltProfile) {
+                    profileName.textContent = "Thomas Davidson";
+                    currentProfileSpan.textContent = "Current: Thomas Davidson";
+                    // Change the profile image when switching to Thomas
+                    profileImage.src = "https://randomuser.me/api/portraits/men/32.jpg";
+                } else {
+                    profileName.textContent = "Ryan Heron";
+                    currentProfileSpan.textContent = "Current: Ryan Heron";
+                    // Change back to Ryan's image
+                    profileImage.src = "https://randomuser.me/api/portraits/men/11.jpg";
+                }
+                
+                // Update links
+                githubLink.href = `https://github.com/${githubUsername}`;
+                linkedinLink.href = `https://www.linkedin.com/in/${linkedinUsername}`;
+                
+                // Update both QR codes
+                githubQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://github.com/${githubUsername}`;
+                linkedinQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://www.linkedin.com/in/${linkedinUsername}`;
+                
+                // Set GitHub URLs for iframes and images
+                document.getElementById('github-stats').src = 
+                    `https://github-readme-stats.vercel.app/api?username=${githubUsername}&show_icons=true&theme=default`;
+                
+                document.getElementById('github-contrib').src = 
+                    `https://ghchart.rshah.org/${githubUsername}`;
+                
+                document.getElementById('github-langs').src = 
+                    `https://github-readme-stats.vercel.app/api/top-langs/?username=${githubUsername}&layout=compact&theme=default`;
+                
+                // Force LinkedIn badge to completely refresh
+                completelyRefreshLinkedIn(linkedinUsername);
+            }
+            
+            function completelyRefreshLinkedIn(username) {
+                // Get the profile section container
+                const linkedinContainer = document.querySelector('.linkedin-container .profile-section');
+                
+                // Completely replace with new content
+                linkedinContainer.innerHTML = `
+                    <div 
+                        class="badge-base LI-profile-badge" 
+                        data-locale="en_US" 
+                        data-size="large" 
+                        data-theme="light" 
+                        data-type="HORIZONTAL" 
+                        data-vanity="${username}" 
+                        data-version="v1">
+                    </div>
+                `;
+                
+                // Reload LinkedIn scripts by removing and re-adding them
+                const oldScripts = document.querySelectorAll('script[src*="platform.linkedin.com"]');
+                oldScripts.forEach(script => script.remove());
+                
+                // Add new scripts
+                const scriptIN = document.createElement('script');
+                scriptIN.src = "https://platform.linkedin.com/in.js";
+                scriptIN.type = "text/javascript";
+                scriptIN.innerHTML = "lang: en_US";
+                document.body.appendChild(scriptIN);
+                
+                const scriptBadge = document.createElement('script');
+                scriptBadge.src = "https://platform.linkedin.com/badges/js/profile.js";
+                scriptBadge.async = true;
+                scriptBadge.defer = true;
+                scriptBadge.type = "text/javascript";
+                document.body.appendChild(scriptBadge);
+            }
+        });
+    </script>
+</body>
+</html> 
