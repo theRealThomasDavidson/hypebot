@@ -11,9 +11,6 @@ require('dotenv').config();
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Changed to use service role key
 
-console.log(supabaseUrl);
-console.log(supabaseKey);
-
 if (!supabaseUrl || !supabaseKey) {
     console.error('Missing Supabase credentials. Please check your .env file.');
     process.exit(1);
