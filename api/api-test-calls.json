@@ -1,0 +1,274 @@
+{
+    "_type": "export",
+    "__export_format": 4,
+    "__export_date": "2025-03-04T17:30:06.717Z",
+    "__export_source": "insomnia.desktop.app:v10.3.1",
+    "resources": [
+        {
+            "_id": "req_e7543499c8144f90ad86e7199cda8a4c",
+            "parentId": "wrk_cdfbb6a926024c8a8628fb45096be8d0",
+            "modified": 1741102946303,
+            "created": 1741027930791,
+            "url": "{{base_url}}/health",
+            "name": "Health",
+            "description": "",
+            "method": "GET",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/10.3.1"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1741102924892,
+            "isPrivate": false,
+            "pathParameters": [],
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "wrk_cdfbb6a926024c8a8628fb45096be8d0",
+            "parentId": null,
+            "modified": 1741027927540,
+            "created": 1741027927540,
+            "name": "HypeBot",
+            "description": "",
+            "scope": "collection",
+            "_type": "workspace"
+        },
+        {
+            "_id": "req_2e6cea29ea45416f967920abe8aced88",
+            "parentId": "fld_b9bee370c64e4b81b4235ed328e840e6",
+            "modified": 1741102941138,
+            "created": 1741099916650,
+            "url": "{{base_url}}/api/profiles",
+            "name": "All profiles",
+            "description": "",
+            "method": "GET",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/10.3.1"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1741102935361,
+            "isPrivate": false,
+            "pathParameters": [],
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_b9bee370c64e4b81b4235ed328e840e6",
+            "parentId": "wrk_cdfbb6a926024c8a8628fb45096be8d0",
+            "modified": 1741102924791,
+            "created": 1741102924791,
+            "name": "Profiles",
+            "description": "",
+            "environment": {},
+            "environmentPropertyOrder": null,
+            "metaSortKey": -1741102924792,
+            "environmentType": "kv",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_650adc175fb9466b876bc34a65272a93",
+            "parentId": "fld_b9bee370c64e4b81b4235ed328e840e6",
+            "modified": 1741106326211,
+            "created": 1741102789431,
+            "url": "{{base_url}}/api/profiles/{{ profile1_id }}",
+            "name": "Specific profile",
+            "description": "",
+            "method": "GET",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/10.3.1"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1741102935261,
+            "isPrivate": false,
+            "pathParameters": [],
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_1899039def8d48b8a65c0af9bd3545fd",
+            "parentId": "fld_b9bee370c64e4b81b4235ed328e840e6",
+            "modified": 1741108455782,
+            "created": 1741101119890,
+            "url": "{{base_url}}/api/profiles",
+            "name": "New profile",
+            "description": "",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"John Doe\",\n  \"blurb\": \"Full Stack Developer passionate about AI\",\n  \"bio\": \"Experienced developer with 5 years...\",\n  \"skills\": [\"JavaScript\", \"Python\", \"React\"],\n  \"pic_url\": \"https://example.com/profile.jpg\",\n  \"github_url\": \"https://github.com/johndoe\",\n  \"linkedin_url\": \"https://linkedin.com/in/johndoe\",\n  \"gauntlet_url\": \"https://gauntletai.com/johndoe\",\n  \"twitter_url\": \"https://x.com/johndoe\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/10.3.1"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1741102935161,
+            "isPrivate": false,
+            "pathParameters": [],
+            "afterResponseScript": "// Use the response body returned by your POST call\nconst parsedResponse = JSON.parse(insomnia.response.body);\n\n// If \"id\" exists, set \"profile_id\" to that value\nif (parsedResponse.data.id) {\n  insomnia.environment.set('profile1_id', parsedResponse.data.id);\n}",
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_5d8334639d544385bdcf029729a63042",
+            "parentId": "fld_b9bee370c64e4b81b4235ed328e840e6",
+            "modified": 1741106336852,
+            "created": 1741102813340,
+            "url": "{{base_url}}/api/profiles/{{ _.profile1_id }}",
+            "name": "Update profile",
+            "description": "",
+            "method": "PUT",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"skills\": [\"JavaScript\", \"Python\", \"Node\"],\n\t\"gauntlet_url\": \"https://gauntletai.com/johndoe\",\n  \"twitter_url\": \"https://x.com/johndoe\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/10.3.1"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1741102935061,
+            "isPrivate": false,
+            "pathParameters": [],
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_3cdaf991c60c48a9a80f6e9cb89962a9",
+            "parentId": "fld_b9bee370c64e4b81b4235ed328e840e6",
+            "modified": 1741108510472,
+            "created": 1741102890989,
+            "url": "{{base_url}}/api/profiles/{{ _.profile1_id }}",
+            "name": "Delete profile",
+            "description": "",
+            "method": "DELETE",
+            "body": {
+                "mimeType": "application/json",
+                "text": ""
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/10.3.1"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1741102934961,
+            "isPrivate": false,
+            "pathParameters": [],
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "env_eb7ea50b9480b5acdfa6fff3b8cab8314dd887b7",
+            "parentId": "wrk_cdfbb6a926024c8a8628fb45096be8d0",
+            "modified": 1741108520432,
+            "created": 1741027927541,
+            "name": "Base Environment",
+            "data": {
+                "base_url": "localhost:3000",
+                "profile1_id": "55f5d54c-989e-49e6-b223-1371c9535ab1"
+            },
+            "dataPropertyOrder": {
+                "&": [
+                    "base_url",
+                    "profile1_id"
+                ]
+            },
+            "color": null,
+            "isPrivate": false,
+            "metaSortKey": 1741027927541,
+            "environmentType": "kv",
+            "kvPairData": [
+                {
+                    "id": "envPair_82b0c6412d954c48af72e349d67c8a2f",
+                    "name": "base_url",
+                    "value": "localhost:3000",
+                    "type": "str",
+                    "enabled": true
+                },
+                {
+                    "id": "envPair_44180e28ab764dd5aa3ef822b3b87798",
+                    "name": "profile1_id",
+                    "value": "e2faed20-9c8c-4d15-8f7c-b72d38d3bdef",
+                    "type": "str",
+                    "enabled": true
+                }
+            ],
+            "_type": "environment"
+        },
+        {
+            "_id": "jar_eb7ea50b9480b5acdfa6fff3b8cab8314dd887b7",
+            "parentId": "wrk_cdfbb6a926024c8a8628fb45096be8d0",
+            "modified": 1741108520429,
+            "created": 1741027927542,
+            "name": "Default Jar",
+            "cookies": [],
+            "_type": "cookie_jar"
+        }
+    ]
+}
