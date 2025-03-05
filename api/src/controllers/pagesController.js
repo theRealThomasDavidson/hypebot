@@ -5,8 +5,8 @@ const fs = require('fs');
 // Define the pages directory path
 const PAGES_DIR = path.join(__dirname, '..', 'pages');
 
-// Get API URL from environment or use default
-const API_URL = process.env.API_URL || 'http://localhost:3000/api';
+// Get API URL from environment or use default (without trailing slash)
+const API_URL = (process.env.API_URL || 'http://localhost:3000').replace(/\/$/, '');
 
 // Function to read file and replace placeholders
 const serveFormattedHtml = (filePath, res) => {
@@ -16,8 +16,11 @@ const serveFormattedHtml = (filePath, res) => {
             return res.status(500).send('Error loading page');
         }
 
-        // Replace apiurl placeholder with the actual API URL
-        const formattedData = data.replace(/${API_URL}/g, API_URL);
+        // Replace the API_BASE_URL line with the correct API URL
+        const formattedData = data.replace(
+            /const API_BASE_URL = ['"].*['"]/g,
+            `const API_BASE_URL = '${API_URL}'`
+        );
 
         // Set content type header and send the formatted HTML
         res.setHeader('Content-Type', 'text/html');
@@ -37,6 +40,6 @@ const challenger_profile = (req, res) => {
 
 // Export functions directly to avoid any module loading issues
 module.exports = {
-    challenger_profile,
     challengers_list,
+    challenger_profile,
 };
