@@ -1,19 +1,27 @@
 const express = require('express');
 const router = express.Router();
+
+// Explicitly require the controller
 const pagesController = require('../controllers/pagesController');
+
+// Verify that required functions exist
+if (!pagesController.challengers_list || !pagesController.challenger_profile) {
+    console.error('ERROR: pagesController functions are not defined properly:', 
+                  Object.keys(pagesController));
+}
 
 /**
  * @route   GET /pages/
- * @desc    View the student list page
+ * @desc    View the challenger list page
  * @access  Public
  */
-router.get('/', pagesController.students_list);
+router.get('/', pagesController.challengers_list);
 
 /**
- * @route   GET /pages/student_profile/:student_id
- * @desc    View a student's profile page
+ * @route   GET /pages/challenger_profile/:challenger_id
+ * @desc    View a challenger's profile page
  * @access  Public
  */
-router.get('/challenger/:student_id', pagesController.student_profile);
+router.get('/challenger/:challenger_id', pagesController.challenger_profile);
 
 module.exports = router;

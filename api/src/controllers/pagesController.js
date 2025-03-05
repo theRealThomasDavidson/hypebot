@@ -1,11 +1,11 @@
-const profileController = require('./profileController');
+const { getProfileById } = require('./profileController');
 const path = require('path');
 
 // Define the pages directory path
 const PAGES_DIR = path.join(__dirname, '..', 'pages');
 
-const students_list = (req, res) => {
-    const filePath = path.join(PAGES_DIR, 'student_list.html');
+const challengers_list = (req, res) => {
+    const filePath = path.join(PAGES_DIR, 'challengers_list.html');
     res.sendFile(filePath, { root: '/' }, (err) => {
         if (err) {
             console.error('Error sending file:', err);
@@ -14,22 +14,9 @@ const students_list = (req, res) => {
     });
 };
 
-const student_profile = (req, res) => {
-    const filePath = path.join(PAGES_DIR, 'individual_student.html');
-    
-    // Using profileController approach:
-    /*
-    const profile = new Promise((resolve, reject) => {
-        profileController.getProfileById(student_id, (err, profile) => {
-            if (err) reject(err);
-            else resolve(profile);
-        });
-    });
-
-    if (!profile) {
-        return res.status(404).json({ error: 'Student not found' });
-    }
-    */
+// Challenger profile page function
+const challenger_profile = (req, res) => {
+    const filePath = path.join(PAGES_DIR, 'individual_challenger.html');
 
     res.sendFile(filePath, { root: '/' }, (err) => {
         if (err) {
@@ -39,7 +26,8 @@ const student_profile = (req, res) => {
     });
 };
 
+// Export functions directly to avoid any module loading issues
 module.exports = {
-    students_list,
-    student_profile,
+    challenger_profile,
+    challengers_list,
 };
