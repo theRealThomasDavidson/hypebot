@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Profile Cards</title>
+    <title>GauntletAI Challengers</title>
     <style>
         :root {
             --primary-color: #3498db;
@@ -49,33 +50,149 @@
             margin-bottom: 10px;
         }
 
+        /* Search bar redesign */
         .search-container {
-            margin: 20px 0;
+            margin: 25px 0;
+            position: relative;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             display: flex;
-            justify-content: center;
+            align-items: center;
+            padding: 6px 8px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .search-icon {
+            color: #aaa;
+            font-size: 18px;
+            margin-left: 10px;
+            margin-right: 5px;
+        }
+
+        .search-container:focus-within .search-icon {
+            color: var(--primary-color);
+        }
+
+        .search-container:focus-within {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
         }
 
         #search-input {
-            padding: 10px 15px;
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
+            flex: 1;
+            border: none;
             font-size: 16px;
+            padding: 12px 15px;
+            background: transparent;
             outline: none;
-            transition: all var(--transition-speed);
+            color: var(--text-color);
         }
 
-        #search-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        #search-input::placeholder {
+            color: #aaa;
+            transition: color 0.2s ease;
         }
-        
+
+        #search-input:focus::placeholder {
+            color: #ccc;
+        }
+
+        /* Clear search button */
+        .clear-search-btn {
+            background: #f1f1f1;
+            border: none;
+            color: #777;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin-right: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .clear-search-btn:hover {
+            background: #e5e5e5;
+            color: #555;
+        }
+
+        .clear-search-btn.visible {
+            display: flex;
+        }
+
+        .ai-search-btn {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #27ae60 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.25);
+        }
+
+        .ai-search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.35);
+        }
+
+        .ai-search-btn.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2980b9 100%);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.25);
+            animation: activePulse 2s infinite;
+        }
+
+        @keyframes activePulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 8px rgba(52, 152, 219, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+            }
+        }
+
+        .sparkle-icon {
+            font-size: 16px;
+        }
+
         /* Featured profiles section */
         .featured-section {
             margin-bottom: 40px;
+            display: none;
+            /* Hide initially */
         }
-        
+
+        .featured-description {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        /* Show the featured section when AI search is active */
+        .featured-section.ai-active {
+            display: block;
+            animation: fadeIn 0.5s forwards;
+        }
+
         .featured-heading {
             text-align: center;
             margin-bottom: 20px;
@@ -83,7 +200,7 @@
             font-size: 1.8rem;
             position: relative;
         }
-        
+
         .featured-heading::after {
             content: '';
             display: block;
@@ -92,31 +209,20 @@
             background: var(--primary-color);
             margin: 10px auto;
         }
-        
+
         .featured-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
+            /* Exactly 3 cards per row for featured */
             gap: 25px;
         }
-        
-        .featured-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-            transition: all var(--transition-speed);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-        
+
         .featured-card::before {
-            content: 'Featured';
+            content: 'AI Match';
             position: absolute;
             top: 10px;
             right: 10px;
-            background-color: var(--secondary-color);
+            background-color: var(--primary-color);
             color: white;
             padding: 5px 10px;
             border-radius: 20px;
@@ -124,25 +230,50 @@
             font-weight: 600;
             z-index: 1;
         }
-        
+
+        .featured-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            transition: all var(--transition-speed);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 2px solid rgba(52, 152, 219, 0.2);
+        }
+
         .featured-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--hover-shadow);
         }
-        
+
         .featured-img-container {
             height: 240px;
             overflow: hidden;
             position: relative;
         }
-        
+
         .featured-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform var(--transition-speed);
         }
-        
+
+        .match-percent {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 5px 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+
         .featured-card:hover .featured-img {
             transform: scale(1.05);
         }
@@ -150,7 +281,8 @@
         /* Regular cards grid */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
+            /* Exactly 4 cards per row */
             gap: 25px;
             margin-top: 30px;
         }
@@ -167,10 +299,17 @@
             opacity: 0;
             animation: fadeIn 0.3s forwards;
         }
-        
+
         @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .profile-card:hover {
@@ -201,6 +340,7 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
 
         .card-name {
@@ -235,6 +375,7 @@
             text-align: center;
             text-decoration: none;
             display: inline-block;
+            margin-top: auto;
         }
 
         .card-button:hover {
@@ -252,7 +393,7 @@
             padding: 30px;
             grid-column: 1 / -1;
         }
-        
+
         .loading-spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
             border-left-color: var(--primary-color);
@@ -262,27 +403,189 @@
             animation: spin 1s linear infinite;
             margin: 0 auto 15px auto;
         }
-        
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* AI search loading indicator */
+        .ai-loading-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-right: 10px;
+            font-weight: 500;
+        }
+
+        .ai-loading-indicator.active {
+            display: flex;
+        }
+
+        .ai-loading-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .ai-loading-dots span {
+            width: 6px;
+            height: 6px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            animation: aiDotPulse 1.4s infinite ease-in-out;
+        }
+
+        @keyframes aiDotPulse {
+
+            0%,
+            100% {
+                transform: scale(0.7);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .ai-loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .ai-loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
         }
 
         /* Responsive adjustments */
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
             .cards-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 15px;
+                grid-template-columns: repeat(4, 1fr);
+                /* Maintain 4 per row */
+                gap: 20px;
             }
-            
+
             .featured-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(3, 1fr);
+                /* Maintain 3 per row */
+                gap: 20px;
             }
         }
 
+        @media (max-width: 992px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+                /* 3 per row on medium screens */
+                gap: 15px;
+            }
+
+            .featured-grid {
+                grid-template-columns: repeat(3, 1fr);
+                /* 3 per row on medium screens */
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                /* 2 per row on tablets */
+                gap: 15px;
+            }
+
+            .featured-grid {
+                grid-template-columns: repeat(2, 1fr);
+                /* 2 per row on tablets */
+                gap: 15px;
+            }
+
+            /* Improved search container responsive layout */
+            .search-container {
+                max-width: 100%;
+                padding: 5px 6px;
+            }
+
+            #search-input {
+                padding: 10px 12px;
+                font-size: 15px;
+            }
+
+            .search-icon {
+                font-size: 16px;
+                margin-left: 8px;
+            }
+
+            .ai-search-btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+
+            .clear-search-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+
+            .ai-loading-indicator {
+                font-size: 0.8rem;
+                margin-right: 8px;
+            }
+        }
+
+        /* Adding a smaller screen media query for phones */
         @media (max-width: 480px) {
-            .cards-grid, .featured-grid {
+            .cards-grid {
                 grid-template-columns: 1fr;
+                /* 1 per row on phones */
+            }
+
+            .featured-grid {
+                grid-template-columns: 1fr;
+                /* 1 per row on phones */
+            }
+
+            .search-container {
+                padding: 4px;
+            }
+
+            .search-icon {
+                font-size: 14px;
+                margin-left: 6px;
+            }
+
+            #search-input {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+
+            .ai-search-btn {
+                padding: 7px 10px;
+                font-size: 0.8rem;
+            }
+
+            .ai-search-btn span.search-text {
+                display: none;
+            }
+
+            .clear-search-btn {
+                width: 26px;
+                height: 26px;
+                margin-right: 5px;
+            }
+
+            .ai-loading-indicator {
+                font-size: 0.8rem;
+            }
+
+            .ai-loading-indicator span.loading-text {
+                display: none;
             }
         }
 
@@ -296,7 +599,63 @@
             box-shadow: var(--card-shadow);
             display: none;
         }
-        
+
+        .no-results-content {
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .ai-suggestion {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(52, 152, 219, 0.08);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary-color);
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-suggestion p {
+            color: #444;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .try-ai-btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all var(--transition-speed);
+        }
+
+        .try-ai-btn:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .sparkle-text {
+            font-weight: 600;
+        }
+
         /* Scroll progress indicator */
         .scroll-progress {
             position: fixed;
@@ -308,7 +667,7 @@
             z-index: 1000;
             transition: width 0.1s;
         }
-        
+
         /* Back to top button */
         .back-to-top {
             position: fixed;
@@ -329,228 +688,177 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
-        
+
         .back-to-top.visible {
             opacity: 1;
             visibility: visible;
         }
-        
+
         .back-to-top:hover {
             background-color: #2980b9;
             transform: translateY(-3px);
         }
     </style>
 </head>
+
 <body>
-    <div class="scroll-progress"></div>
-    
     <div class="container">
         <header>
-            <h1>Student Profiles</h1>
-            <p>Connect with talented students from our program</p>
-            
+            <h1>GauntletAI Challengers</h1>
+            <p>Discover talented developers and their projects from the GauntletAI program</p>
+
             <div class="search-container">
-                <input type="text" id="search-input" placeholder="Search by name, skills, or interests...">
+                <div class="search-icon">🔍</div>
+                <input type="text" id="search-input" placeholder="Search by name, skills, projects, or keywords...">
+                <button id="clear-search-btn" class="clear-search-btn" title="Clear search">
+                    ✕
+                </button>
+                <div class="ai-loading-indicator" id="ai-loading-indicator">
+                    <span class="loading-text">AI searching</span>
+                    <div class="ai-loading-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <button id="ai-search-btn" class="ai-search-btn" title="Search with AI">
+                    <span class="sparkle-icon">✨</span>
+                    <span class="search-text">AI Search</span>
+                </button>
             </div>
         </header>
-        
-        <!-- Featured profiles section -->
-        <section class="featured-section">
-            <h2 class="featured-heading">Featured Students</h2>
-            <div class="featured-grid">
-                <!-- Featured Profile 1 -->
-                <div class="featured-card" data-name="Alexandra Morgan" data-keywords="AI research, computer vision, deep learning">
-                    <div class="featured-img-container">
-                        <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Alexandra Morgan" class="featured-img" loading="eager">
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-name">Alexandra Morgan</h3>
-                        <div class="card-title">AI Research Lead</div>
-                        <p class="card-bio">Leading the latest innovations in computer vision and deep learning with published papers in top conferences.</p>
-                        <a href="../basic_movement/index.html" class="card-button">View Profile</a>
-                    </div>
-                </div>
-                
-                <!-- Featured Profile 2 -->
-                <div class="featured-card" data-name="Marcus Chen" data-keywords="robotics, hardware design, mechatronics">
-                    <div class="featured-img-container">
-                        <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="Marcus Chen" class="featured-img" loading="eager">
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-name">Marcus Chen</h3>
-                        <div class="card-title">Robotics Engineer</div>
-                        <p class="card-bio">Designs and builds advanced robotic systems with a focus on efficient hardware-software integration.</p>
-                        <a href="#" class="card-button">View Profile</a>
-                    </div>
-                </div>
-                
-                <!-- Featured Profile 3 -->
-                <div class="featured-card" data-name="Sophia Williams" data-keywords="data science, NLP, machine learning">
-                    <div class="featured-img-container">
-                        <img src="https://randomuser.me/api/portraits/women/9.jpg" alt="Sophia Williams" class="featured-img" loading="eager">
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-name">Sophia Williams</h3>
-                        <div class="card-title">Data Science Lead</div>
-                        <p class="card-bio">Expert in natural language processing and predictive analytics with experience at top tech companies.</p>
-                        <a href="#" class="card-button">View Profile</a>
-                    </div>
-                </div>
-                
-                <!-- Featured Profile 4 -->
-                <div class="featured-card" data-name="Raj Patel" data-keywords="cloud architecture, kubernetes, devops">
-                    <div class="featured-img-container">
-                        <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Raj Patel" class="featured-img" loading="eager">
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-name">Raj Patel</h3>
-                        <div class="card-title">Cloud Architect</div>
-                        <p class="card-bio">Specializes in designing scalable cloud solutions and implementing modern DevOps practices.</p>
-                        <a href="#" class="card-button">View Profile</a>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <h2 class="featured-heading">All Students</h2>
-        <div class="cards-grid" id="cards-container">
-            <!-- Loading indicator -->
-            <div class="loading-container" id="loading-indicator">
+        <div class="featured-section">
+            <h2 class="featured-heading">AI Recommended Challengers</h2>
+            <p class="featured-description">Based on your search criteria, our AI has selected these top matches</p>
+            <div id="featured-grid" class="featured-grid">
+                <!-- Featured profiles will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="cards-container" class="cards-grid">
+            <!-- Student profile cards will be dynamically inserted here -->
+            <div id="loading-indicator" class="loading-container">
                 <div class="loading-spinner"></div>
                 <p>Loading profiles...</p>
             </div>
 
-            <!-- No results message -->
-            <div id="no-results">
-                <h3>No matching profiles found</h3>
-                <p>Try adjusting your search terms</p>
+            <div id="no-results" class="no-results hidden">
+                <p class="no-results-content">No profiles match your search. Try different keywords.</p>
+                <div id="ai-suggestion" class="ai-suggestion">
+                    <p id="ai-suggestion-text">Want better results? Try searching with our AI assistant!</p>
+                    <button id="try-ai-btn" class="try-ai-btn">
+                        <span class="sparkle-icon">✨</span>
+                        <span class="sparkle-text">Try AI Search</span>
+                    </button>
+                </div>
             </div>
         </div>
+
+        <!-- Back to top button -->
+        <button id="back-to-top" class="back-to-top">
+            <span>↑</span>
+        </button>
+
+        <!-- Scroll progress indicator -->
+        <div class="scroll-progress-container">
+            <div class="scroll-progress"></div>
+        </div>
+
+        <!-- Voice-enabled AI Chatbot -->
+        <div class="chatbot-container" id="chatbot-container">
+            <div class="chatbot-header">
+                <h3>AI Assistant</h3>
+                <button id="close-chatbot" class="close-chatbot">×</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="bot-message">
+                    <p>Hi there! I can help you find information about GauntletAI Challengers and their projects. What
+                        would you like to know?</p>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <textarea id="user-input" placeholder="Type your message..."></textarea>
+                <button id="voice-input" class="voice-input-btn">
+                    <span class="mic-icon">🎤</span>
+                </button>
+                <button id="send-message" class="send-btn">Send</button>
+            </div>
+            <div class="voice-indicator hidden" id="voice-indicator">
+                <div class="voice-waves">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <p>Listening...</p>
+                <button id="stop-voice" class="stop-voice-btn">Stop</button>
+            </div>
+        </div>
+
+        <button id="open-chatbot" class="open-chatbot-btn">
+            <span class="chat-icon">💬</span>
+            <span class="chat-text">Ask AI Assistant</span>
+        </button>
     </div>
-    
-    <div class="back-to-top" id="back-to-top">↑</div>
 
     <script>
+        // API Endpoints
+        const API_BASE_URL = 'http://localhost:3000/api';
+        const API_PROFILES = `${API_BASE_URL}/profiles`;
+        const API_PROJECTS = `${API_BASE_URL}/projects`;
+
         // =========================================================================
-        // CARD DATA - MODIFY THIS SECTION TO ADD/EDIT STUDENT PROFILES
+        // DATA FETCHING FROM API
         // =========================================================================
-        
-        // Featured profiles are defined in the HTML above
-        
-        // Regular student profiles - add, remove or edit these as needed
-        const studentProfiles = [
-            // The format for each student is:
-            // {
-            //    name: "Student Name",               // Required: Student's name
-            //    imageUrl: "URL_to_image",           // Required: URL to profile image
-            //    title: "Student Title/Role",        // Required: Student's professional title
-            //    bio: "Brief description...",        // Required: Short bio (1-2 sentences)
-            //    profileUrl: "URL_to_profile_page",  // Required: URL to detailed profile page
-            //    keywords: "keyword1, keyword2, ..." // Optional: Keywords for search filtering
-            // }
-            
-            // Example profile 1
-            {
-                name: "Emma Johnson",
-                imageUrl: "https://randomuser.me/api/portraits/women/33.jpg",
-                title: "Frontend Developer",
-                bio: "Passionate about creating intuitive user interfaces with React and modern JavaScript.",
-                profileUrl: "profile.html?id=1",
-                keywords: "javascript, react, frontend, ui"
-            },
-            
-            // Example profile 2
-            {
-                name: "Liam Davis",
-                imageUrl: "https://randomuser.me/api/portraits/men/42.jpg",
-                title: "Data Scientist",
-                bio: "Analyzes complex datasets using Python and machine learning to extract meaningful insights.",
-                profileUrl: "profile.html?id=2",
-                keywords: "python, data science, machine learning, tensorflow"
-            },
-            
-            // Example profile 3
-            {
-                name: "Olivia Martinez",
-                imageUrl: "https://randomuser.me/api/portraits/women/56.jpg",
-                title: "Backend Developer",
-                bio: "Specializes in building robust backend systems using Java and Spring framework.",
-                profileUrl: "profile.html?id=3",
-                keywords: "java, spring, backend, api"
-            },
-            
-            // Example profile 4
-            {
-                name: "Noah Smith",
-                imageUrl: "https://randomuser.me/api/portraits/men/17.jpg",
-                title: "UX Designer",
-                bio: "Creates user-centered designs and prototypes using Figma and other design tools.",
-                profileUrl: "profile.html?id=4",
-                keywords: "ux, design, figma, user research"
-            },
-            
-            // Example profile 5
-            {
-                name: "Ava Wilson",
-                imageUrl: "https://randomuser.me/api/portraits/women/22.jpg",
-                title: "Mobile Developer",
-                bio: "Builds elegant mobile applications for Apple devices using Swift and UIKit.",
-                profileUrl: "profile.html?id=5",
-                keywords: "mobile, ios, swift, android"
+
+        // Fetch all profiles
+        async function fetchProfiles() {
+            try {
+                const response = await fetch(API_PROFILES);
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                const result = await response.json();
+
+                if (result.success && Array.isArray(result.data)) {
+                    return result.data;
+                } else {
+                    throw new Error('Invalid data format received from API');
+                }
+            } catch (error) {
+                console.error('Error fetching profiles:', error);
+                return [];
             }
-            
-            // Add more profiles here as needed
-            // When integrating with a backend, this array will be populated from the server
-        ];
-        
-        // To demonstrate many profiles, we'll clone these base profiles multiple times
-        // This code is only for demonstration and would be removed in the real implementation
-        function generateManyProfiles(baseProfiles, count) {
-            const result = [];
-            
-            for (let i = 0; i < count; i++) {
-                // Clone a random profile from the base profiles
-                const baseIndex = i % baseProfiles.length;
-                const baseProfile = baseProfiles[baseIndex];
-                
-                // Create a unique profile by modifying some properties
-                const gender = Math.random() > 0.5 ? 'men' : 'women';
-                const photoId = Math.floor(Math.random() * 99);
-                
-                const profile = {
-                    name: baseProfile.name,
-                    imageUrl: `https://randomuser.me/api/portraits/${gender}/${photoId}.jpg`,
-                    title: baseProfile.title,
-                    bio: baseProfile.bio,
-                    profileUrl: `profile.html?id=${i + 6}`, // Start IDs after the base profiles
-                    keywords: baseProfile.keywords
-                };
-                
-                result.push(profile);
-            }
-            
-            return result;
         }
-        
-        // Combine the base profiles with generated profiles for demonstration
-        // In a real implementation, this would be replaced with data from your backend
-        const allProfiles = [
-            ...studentProfiles,
-            ...generateManyProfiles(studentProfiles, 145) // Generate additional profiles to reach 150 total
-        ];
-        
+
+        // Format profile data for display
+        function formatProfileForDisplay(profile) {
+            return {
+                id: profile.id,
+                name: profile.name,
+                imageUrl: profile.pic_url || 'https://randomuser.me/api/portraits/lego/1.jpg', // Fallback image
+                title: profile.blurb || 'GauntletAI Challenger',
+                bio: profile.bio || 'No bio available',
+                profileUrl: `individual_challenger.html?id=${profile.id}`,
+                skills: profile.skills || [],
+                keywords: profile.skills ? profile.skills.join(',') : ''
+            };
+        }
+
         // =========================================================================
-        // PROFILE CARD FUNCTIONALITY - DOES NOT NEED MODIFICATION
+        // PROFILE CARD FUNCTIONALITY 
         // =========================================================================
-        
+
         // DOM elements
         const cardsContainer = document.getElementById('cards-container');
+        const featuredGrid = document.getElementById('featured-grid');
         const searchInput = document.getElementById('search-input');
         const noResults = document.getElementById('no-results');
         const loadingIndicator = document.getElementById('loading-indicator');
         const backToTopButton = document.getElementById('back-to-top');
         const scrollProgress = document.querySelector('.scroll-progress');
-        
+
+        // Store all profiles data for subsequent searches
+        let allProfilesData = [];
+
         // Create card DOM element
         function createCardElement(profile, index) {
             const card = document.createElement('div');
@@ -558,7 +866,7 @@
             card.setAttribute('data-name', profile.name);
             card.setAttribute('data-keywords', profile.keywords || '');
             card.style.animationDelay = `${index * 30}ms`;
-            
+
             card.innerHTML = `
                 <div class="card-img-container">
                     <img data-src="${profile.imageUrl}" alt="${profile.name}" class="card-img" loading="lazy">
@@ -566,14 +874,37 @@
                 <div class="card-content">
                     <h3 class="card-name">${profile.name}</h3>
                     <div class="card-title">${profile.title}</div>
-                    <p class="card-bio">${profile.bio}</p>
                     <a href="${profile.profileUrl}" class="card-button">View Profile</a>
                 </div>
             `;
-            
+
             return card;
         }
-        
+
+        // Create featured profile card
+        function createFeaturedCardElement(profile) {
+            const card = document.createElement('div');
+            card.className = 'featured-card';
+
+            // Add relevance match percentage (simulated)
+            // In a real AI implementation, this would come from the AI's confidence score
+            const matchPercent = Math.floor(Math.random() * 20) + 80; // Random 80-99% match
+
+            card.innerHTML = `
+                <div class="featured-img-container">
+                    <img data-src="${profile.imageUrl}" alt="${profile.name}" class="featured-img" loading="lazy">
+                    <div class="match-percent">${matchPercent}% match</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-name">${profile.name}</h3>
+                    <div class="card-title">${profile.title}</div>
+                    <a href="${profile.profileUrl}" class="card-button">View Profile</a>
+                </div>
+            `;
+
+            return card;
+        }
+
         // Lazy loading implementation
         function lazyLoadImages() {
             const images = document.querySelectorAll('img[data-src]');
@@ -582,7 +913,7 @@
                 rootMargin: '0px',
                 threshold: 0.1
             };
-            
+
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -593,76 +924,380 @@
                     }
                 });
             }, options);
-            
+
             images.forEach(img => {
                 observer.observe(img);
             });
         }
-        
-        // Display profiles from the data
-        function displayProfiles(profiles) {
+
+        // Helper function to clear profile cards
+        function clearProfileCards() {
             // Clear any existing cards (except no-results message)
             Array.from(cardsContainer.children).forEach(child => {
                 if (child.id !== 'no-results' && child.id !== 'loading-indicator') {
                     cardsContainer.removeChild(child);
                 }
             });
-            
+
+            // Clear featured grid
+            featuredGrid.innerHTML = '';
+        }
+
+        // Display profiles from the data
+        function displayProfiles(profiles) {
+            // Clear existing cards
+            clearProfileCards();
+
+            // Hide featured section by default (only show with AI search)
+            document.querySelector('.featured-section').classList.remove('ai-active');
+
             // Show loading indicator
             loadingIndicator.style.display = 'block';
-            
+
             // Use setTimeout to avoid blocking the UI
             setTimeout(() => {
-                // Batch DOM operations for performance
-                const fragment = document.createDocumentFragment();
-                
-                profiles.forEach((profile, index) => {
+                // Shuffle profiles for randomized display order
+                const shuffledProfiles = shuffleArray([...profiles]);
+
+                // Batch DOM operations for regular cards
+                const regularFragment = document.createDocumentFragment();
+
+                shuffledProfiles.forEach((profile, index) => {
                     const card = createCardElement(profile, index);
-                    fragment.appendChild(card);
+                    regularFragment.appendChild(card);
                 });
-                
+
                 // Remove loading indicator
                 loadingIndicator.style.display = 'none';
-                
+
                 // Append all cards at once
-                cardsContainer.appendChild(fragment);
-                
+                cardsContainer.appendChild(regularFragment);
+
                 // Initialize lazy loading
                 lazyLoadImages();
+
+                // Hide no results message
+                noResults.style.display = 'none';
             }, 10);
         }
-        
-        // Search functionality
-        function setupSearch() {
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                let hasVisibleCards = false;
-                const cards = document.querySelectorAll('.profile-card');
-                
-                cards.forEach(card => {
-                    const name = card.getAttribute('data-name').toLowerCase();
-                    const keywords = card.getAttribute('data-keywords').toLowerCase();
-                    const content = card.textContent.toLowerCase();
-                    
-                    if (name.includes(searchTerm) || keywords.includes(searchTerm) || content.includes(searchTerm)) {
-                        card.classList.remove('hidden');
-                        hasVisibleCards = true;
-                    } else {
-                        card.classList.add('hidden');
+
+        // Fisher-Yates shuffle algorithm to randomize array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Display AI search results with featured section
+        function displayAISearchResults(profiles, searchTerm) {
+            if (!profiles || profiles.length === 0) {
+                // If no results, hide featured section
+                document.querySelector('.featured-section').classList.remove('ai-active');
+                noResults.style.display = 'block';
+                return;
+            }
+
+            // Clear existing cards
+            clearProfileCards();
+
+            // Show featured section
+            document.querySelector('.featured-section').classList.add('ai-active');
+            document.querySelector('.featured-heading').textContent = 'AI Recommended Challengers';
+
+            // Split the search term into words for better relevance scoring
+            const searchWords = searchTerm.toLowerCase().trim().split(/\s+/).filter(word => word.length > 0);
+
+            // Use relevance scoring to select featured profiles
+            const relevanceScore = (profile) => {
+                if (!profile) return 0;
+                let score = 0;
+                const name = profile.name ? profile.name.toLowerCase() : '';
+                const keywords = profile.keywords ? profile.keywords.toLowerCase() : '';
+                const title = profile.title ? profile.title.toLowerCase() : '';
+                const bio = profile.bio ? profile.bio.toLowerCase() : '';
+
+                // Calculate score based on each search word
+                searchWords.forEach(word => {
+                    // Name match gives highest score
+                    if (name.includes(word)) {
+                        score += 10;
+                    }
+
+                    // Skills match
+                    if (keywords.includes(word)) {
+                        score += 5;
+                    }
+
+                    // Title match
+                    if (title.includes(word)) {
+                        score += 3;
+                    }
+
+                    // Bio match
+                    if (bio.includes(word)) {
+                        score += 2;
                     }
                 });
-                
-                // Show or hide the "no results" message
-                noResults.style.display = hasVisibleCards ? 'none' : 'block';
+
+                return score;
+            };
+
+            // Sort by relevance score
+            const sortedProfiles = [...profiles].sort((a, b) => relevanceScore(b) - relevanceScore(a));
+
+            // Top 3 become featured (or fewer if fewer profiles available)
+            const featuredProfiles = sortedProfiles.slice(0, Math.min(3, sortedProfiles.length));
+            // Rest are regular results
+            const regularProfiles = sortedProfiles.slice(Math.min(3, sortedProfiles.length));
+
+            // Create featured profile cards
+            const featuredFragment = document.createDocumentFragment();
+            featuredProfiles.forEach(profile => {
+                const card = createFeaturedCardElement(profile);
+                featuredFragment.appendChild(card);
+            });
+            featuredGrid.appendChild(featuredFragment);
+
+            // Batch DOM operations for regular cards
+            const regularFragment = document.createDocumentFragment();
+            regularProfiles.forEach((profile, index) => {
+                const card = createCardElement(profile, index);
+                regularFragment.appendChild(card);
+            });
+
+            // Append all cards at once
+            cardsContainer.appendChild(regularFragment);
+
+            // Initialize lazy loading
+            lazyLoadImages();
+
+            // Hide no results message
+            noResults.style.display = 'none';
+        }
+
+        // Search functionality for both basic and semantic search
+        function setupSearch() {
+            const aiSearchBtn = document.getElementById('ai-search-btn');
+            const clearSearchBtn = document.getElementById('clear-search-btn');
+            const searchContainer = document.querySelector('.search-container');
+            let isAISearchActive = false;
+
+            // Clear search button functionality
+            clearSearchBtn.addEventListener('click', function () {
+                searchInput.value = '';
+                this.classList.remove('visible');
+                // Reset to show all profiles
+                displayProfiles(allProfilesData);
+                noResults.style.display = 'none';
+                // Reset featured section
+                document.querySelector('.featured-section').classList.remove('ai-active');
+            });
+
+            // Show/hide clear button based on search input
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+
+                // Show/hide clear button
+                if (searchTerm.trim()) {
+                    clearSearchBtn.classList.add('visible');
+                } else {
+                    clearSearchBtn.classList.remove('visible');
+                }
+
+                // If the search term is empty, just show all cards
+                if (!searchTerm.trim()) {
+                    // Reset to show all profiles
+                    displayProfiles(allProfilesData);
+                    noResults.style.display = 'none';
+                    return;
+                }
+
+                // IMPORTANT: Always use basic search for typing
+                // Never do AI search on input, only on button click
+                // Regular search ALWAYS searches by name only, regardless of AI button state
+                performBasicSearch(searchTerm, true); // Always true for name-only search
+            });
+
+            // AI search button toggle
+            aiSearchBtn.addEventListener('click', function () {
+                isAISearchActive = !isAISearchActive;
+                this.classList.toggle('active', isAISearchActive);
+
+                // Re-run search with current input 
+                // Only perform AI search when button is clicked
+                const currentSearchTerm = searchInput.value.toLowerCase();
+                if (currentSearchTerm.trim()) {
+                    if (isAISearchActive) {
+                        // Trigger AI search immediately when button is clicked
+                        performSemanticSearch(currentSearchTerm);
+                    } else {
+                        // Reset to basic search if switching off AI search
+                        performBasicSearch(currentSearchTerm, true); // true = name only
+                    }
+                } else {
+                    // If search field is empty, just show all profiles
+                    displayProfiles(allProfilesData);
+                }
+            });
+
+            // Setup Try AI Search button in the no results message
+            const tryAiBtn = document.getElementById('try-ai-btn');
+            tryAiBtn.addEventListener('click', function () {
+                isAISearchActive = true;
+                aiSearchBtn.classList.add('active');
+
+                const currentSearchTerm = searchInput.value.toLowerCase();
+                if (currentSearchTerm.trim()) {
+                    performSemanticSearch(currentSearchTerm);
+                }
             });
         }
-        
+
+        // Basic client-side search
+        function performBasicSearch(searchTerm, nameOnly = true) { // Default to nameOnly=true
+            // Hide featured section for basic search
+            document.querySelector('.featured-section').classList.remove('ai-active');
+
+            // Split search term into individual words for better matching
+            const searchWords = searchTerm.toLowerCase().trim().split(/\s+/).filter(word => word.length > 0);
+
+            // Filter profiles based on search term
+            const filteredProfiles = allProfilesData.filter(profile => {
+                if (!profile) return false;
+
+                const name = profile.name ? profile.name.toLowerCase() : '';
+
+                // When nameOnly is true (which is now the default and always passed for regular search),
+                // we only check if any search word matches the name
+                if (nameOnly) {
+                    // Changed from .some to .every - ALL words must match, not just any of them
+                    return searchWords.every(word => name.includes(word));
+                }
+
+                // This code will now only run for AI-related searches that explicitly pass nameOnly=false
+                const keywords = profile.keywords ? profile.keywords.toLowerCase() : '';
+                const title = profile.title ? profile.title.toLowerCase() : '';
+                const bio = profile.bio ? profile.bio.toLowerCase() : '';
+
+                return searchWords.some(word =>
+                    name.includes(word) ||
+                    keywords.includes(word) ||
+                    title.includes(word) ||
+                    bio.includes(word)
+                );
+            });
+
+            if (filteredProfiles.length === 0) {
+                // Clear existing cards
+                Array.from(cardsContainer.children).forEach(child => {
+                    if (child.id !== 'no-results' && child.id !== 'loading-indicator') {
+                        cardsContainer.removeChild(child);
+                    }
+                });
+
+                // Show no results message
+                noResults.style.display = 'block';
+
+                // Show AI suggestion if using name-only search and there are no results
+                const aiSuggestion = document.getElementById('ai-suggestion');
+                const aiSuggestionText = document.getElementById('ai-suggestion-text');
+
+                if (nameOnly && searchTerm.length >= 2) {
+                    // Update suggestion text based on search term length
+                    if (searchTerm.length < 3) {
+                        aiSuggestionText.textContent = `Keep typing or try our AI Search for broader results!`;
+                    } else if (searchTerm.length >= 3 && searchTerm.length < 5) {
+                        aiSuggestionText.textContent = `No name matches for "${searchTerm}". AI Search can look beyond names!`;
+                    } else {
+                        aiSuggestionText.textContent = `Try AI Search to find challengers with related skills and projects!`;
+                    }
+
+                    aiSuggestion.style.display = 'block';
+
+                    // Reset animation to trigger it again
+                    aiSuggestion.style.animation = 'none';
+                    setTimeout(() => {
+                        aiSuggestion.style.animation = 'fadeInUp 0.5s forwards';
+                    }, 10);
+                } else {
+                    aiSuggestion.style.display = 'none';
+                }
+            } else {
+                // Display the filtered profiles
+                displayProfiles(filteredProfiles);
+                // Hide no results message
+                noResults.style.display = 'none';
+            }
+        }
+
+        // Semantic search using the API
+        async function performSemanticSearch(searchTerm) {
+            try {
+                // Show AI loading state
+                const aiLoadingIndicator = document.getElementById('ai-loading-indicator');
+                aiLoadingIndicator.classList.add('active');
+
+                // Show general loading state
+                loadingIndicator.style.display = 'block';
+
+                // In a real implementation, this would be a call to a semantic search endpoint
+                // For this demo, we'll use the basic search as a placeholder
+                // const response = await fetch(`${API_BASE_URL}/search?query=${encodeURIComponent(searchTerm)}`);
+                // const result = await response.json();
+
+                // Simulate API call delay (longer for AI search to feel more realistic)
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                // Split search term into individual words for better matching
+                const searchWords = searchTerm.toLowerCase().trim().split(/\s+/).filter(word => word.length > 0);
+
+                // Find matching profiles from our stored data
+                const matchingProfiles = allProfilesData.filter(profile => {
+                    if (!profile) return false;
+
+                    const name = profile.name ? profile.name.toLowerCase() : '';
+                    const keywords = profile.keywords ? profile.keywords.toLowerCase() : '';
+                    const title = profile.title ? profile.title.toLowerCase() : '';
+                    const bio = profile.bio ? profile.bio.toLowerCase() : '';
+
+                    // Check if any search word is found in any field
+                    return searchWords.some(word =>
+                        name.includes(word) ||
+                        keywords.includes(word) ||
+                        title.includes(word) ||
+                        bio.includes(word)
+                    );
+                });
+
+                // Display results with featured section
+                displayAISearchResults(matchingProfiles, searchTerm);
+
+                // Hide loading indicators
+                loadingIndicator.style.display = 'none';
+                aiLoadingIndicator.classList.remove('active');
+            } catch (error) {
+                console.error('Semantic search error:', error);
+                // Fall back to basic search if there's an error
+                // Use name-only search for consistency with regular search behavior
+                performBasicSearch(searchTerm, true);
+                loadingIndicator.style.display = 'none';
+                document.querySelector('.featured-section').classList.remove('ai-active');
+
+                const aiLoadingIndicator = document.getElementById('ai-loading-indicator');
+                if (aiLoadingIndicator) {
+                    aiLoadingIndicator.classList.remove('active');
+                }
+            }
+        }
+
         // Scroll progress indicator
         function updateScrollProgress() {
             const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (window.scrollY / windowHeight) * 100;
             scrollProgress.style.width = scrolled + '%';
-            
+
             // Show/hide back to top button
             if (window.scrollY > 300) {
                 backToTopButton.classList.add('visible');
@@ -670,7 +1305,7 @@
                 backToTopButton.classList.remove('visible');
             }
         }
-        
+
         // Back to top functionality
         function setupBackToTop() {
             backToTopButton.addEventListener('click', () => {
@@ -680,16 +1315,173 @@
                 });
             });
         }
-        
+
+        // AI Chatbot functionality
+        function setupChatbot() {
+            const openChatbotBtn = document.getElementById('open-chatbot');
+            const closeChatbotBtn = document.getElementById('close-chatbot');
+            const chatbotContainer = document.getElementById('chatbot-container');
+            const chatMessages = document.getElementById('chatbot-messages');
+            const userInput = document.getElementById('user-input');
+            const sendMessageBtn = document.getElementById('send-message');
+            const voiceInputBtn = document.getElementById('voice-input');
+            const stopVoiceBtn = document.getElementById('stop-voice');
+            const voiceIndicator = document.getElementById('voice-indicator');
+
+            let isListening = false;
+
+            // Toggle chatbot visibility
+            openChatbotBtn.addEventListener('click', () => {
+                chatbotContainer.classList.add('active');
+                openChatbotBtn.classList.add('hidden');
+            });
+
+            closeChatbotBtn.addEventListener('click', () => {
+                chatbotContainer.classList.remove('active');
+                openChatbotBtn.classList.remove('hidden');
+            });
+
+            // Send message functionality
+            function sendMessage() {
+                const messageText = userInput.value.trim();
+                if (!messageText) return;
+
+                // Add user message to chat
+                addMessageToChat('user', messageText);
+
+                // Clear input
+                userInput.value = '';
+
+                // Process the message (in a real app, this would call your AI API)
+                processUserMessage(messageText);
+            }
+
+            sendMessageBtn.addEventListener('click', sendMessage);
+
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Add message to chat window
+            function addMessageToChat(sender, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = sender === 'user' ? 'user-message' : 'bot-message';
+
+                const messagePara = document.createElement('p');
+                messagePara.textContent = text;
+
+                messageDiv.appendChild(messagePara);
+                chatMessages.appendChild(messageDiv);
+
+                // Auto-scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Process user message and generate response
+            async function processUserMessage(message) {
+                // Show typing indicator
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'bot-message typing';
+                typingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+                chatMessages.appendChild(typingDiv);
+
+                try {
+                    // In a real app, this would be a call to your AI backend
+                    // Simulating API delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    // Remove typing indicator
+                    chatMessages.removeChild(typingDiv);
+
+                    // Generate a simple response
+                    let response = "I'm a placeholder AI assistant. In the real implementation, I would provide intelligent responses about GauntletAI Challengers and their projects.";
+
+                    if (message.toLowerCase().includes('search') || message.toLowerCase().includes('find')) {
+                        response = "You can use the search bar at the top of the page to find challengers by name, skills, or keywords.";
+                    } else if (message.toLowerCase().includes('project')) {
+                        response = "Each challenger has projects listed on their profile page. Click 'View Profile' on any card to see their projects.";
+                    }
+
+                    // Add bot response to chat
+                    addMessageToChat('bot', response);
+
+                } catch (error) {
+                    console.error('Error processing message:', error);
+                    chatMessages.removeChild(typingDiv);
+                    addMessageToChat('bot', "I'm having trouble connecting to my brain right now. Please try again later.");
+                }
+            }
+
+            // Voice input functionality
+            voiceInputBtn.addEventListener('click', () => {
+                if (!isListening) {
+                    startVoiceRecognition();
+                }
+            });
+
+            stopVoiceBtn.addEventListener('click', () => {
+                if (isListening) {
+                    stopVoiceRecognition();
+                }
+            });
+
+            // Start voice recognition
+            function startVoiceRecognition() {
+                // In a real app, this would use the Web Speech API or OpenAI Whisper API
+                isListening = true;
+                voiceIndicator.classList.remove('hidden');
+
+                // Simulate recording for demo
+                setTimeout(() => {
+                    if (isListening) {
+                        stopVoiceRecognition();
+                        // Simulate a received voice message
+                        userInput.value = "Tell me about the challengers' projects";
+                    }
+                }, 3000);
+            }
+
+            // Stop voice recognition
+            function stopVoiceRecognition() {
+                isListening = false;
+                voiceIndicator.classList.add('hidden');
+            }
+        }
+
         // Initialize everything
-        document.addEventListener('DOMContentLoaded', function() {
-            displayProfiles(allProfiles);
+        async function initializePage() {
+            // Fetch profiles from API
+            const profilesData = await fetchProfiles();
+
+            // Format profiles for display
+            const formattedProfiles = profilesData.map(formatProfileForDisplay);
+
+            // Store all profiles data for searches
+            allProfilesData = formattedProfiles;
+
+            // Display profiles
+            displayProfiles(formattedProfiles);
+
+            // Set up functionality
             setupSearch();
             setupBackToTop();
-            
+            setupChatbot();
+
+            // Check if search input has text on page load
+            if (searchInput.value.trim()) {
+                clearSearchBtn.classList.add('visible');
+            }
+
             // Set up scroll listeners
             window.addEventListener('scroll', updateScrollProgress);
-        });
+        }
+
+        // Start the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
+
 </html>
