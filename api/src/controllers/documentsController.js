@@ -81,7 +81,7 @@ const createDocument = async (req, res) => {
  */
 const searchDocuments = async (req, res) => {
   try {
-    const { query, limit = 5, threshold = 0.4, userId } = req.query;
+    const { query, limit = 5, threshold = 0.2, userId } = req.query;
     
     if (!query) {
       return res.status(400).json({ error: 'Search query is required' });
