@@ -6,7 +6,7 @@ const fs = require('fs');
 const PAGES_DIR = path.join(__dirname, '..', 'pages');
 
 // Get API URL from environment or use default (without trailing slash)
-const API_URL = (process.env.API_URL || 'http://localhost:3000').replace(/\/$/, '');
+const HOSTED_URL = (process.env.HOSTED_URL || 'http://localhost:3000').replace(/\/$/, '');
 
 // Function to read file and replace placeholders
 const serveFormattedHtml = (filePath, res) => {
@@ -16,13 +16,9 @@ const serveFormattedHtml = (filePath, res) => {
             return res.status(500).send('Error loading page');
         }
 
-        // Replace the API_BASE_URL line with the correct API URL
-        const formattedData = data.replace(
-            /const API_BASE_URL = ['"].*['"]/g,
-            `const API_BASE_URL = '${API_URL}'`
-        );
+        // Replace EVERY instance of ${HOSTED_REPLACE_URL} in the file
+        const formattedData = data.replace(/\$\{HOSTED_REPLACE_URL\}/g, HOSTED_URL);
 
-        // Set content type header and send the formatted HTML
         res.setHeader('Content-Type', 'text/html');
         res.send(formattedData);
     });

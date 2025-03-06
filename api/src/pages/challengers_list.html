@@ -801,7 +801,7 @@
 
     <script>
         // API Endpoints
-        const API_BASE_URL = '${API_URL}/api';
+        const API_BASE_URL = '${HOSTED_REPLACE_URL}/api';
         const API_PROFILES = `${API_BASE_URL}/profiles`;
         const API_PROJECTS = `${API_BASE_URL}/projects`;
 
@@ -837,7 +837,7 @@
                 imageUrl: profile.pic_url || 'https://randomuser.me/api/portraits/lego/1.jpg', // Fallback image
                 title: profile.blurb || 'GauntletAI Challenger',
                 bio: profile.bio || 'No bio available',
-                profileUrl: `individual_challenger.html?id=${profile.id}`,
+                profileUrl: `/pages/challenger/${profile.id}`,
                 skills: profile.skills || [],
                 keywords: profile.skills ? profile.skills.join(',') : ''
             };
