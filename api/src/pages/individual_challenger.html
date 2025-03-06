@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Integrated Profile Card</title>
+    <title>GauntletAI Challenger Profile</title>
     <style>
         :root {
             --primary-color: #3498db;
@@ -292,12 +293,13 @@
             background-color: #2980b9;
         }
 
-        .github-container, .linkedin-container {
+        .github-container,
+        .linkedin-container {
             background: white;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .qr-section {
@@ -307,7 +309,9 @@
             margin-bottom: 15px;
         }
 
-        .github-stats, .github-langs, .github-contrib-chart {
+        .github-stats,
+        .github-langs,
+        .github-contrib-chart {
             width: 100%;
             border-radius: 5px;
             margin-bottom: 15px;
@@ -323,7 +327,7 @@
             .about-qr-container {
                 flex-direction: column;
             }
-            
+
             .qr-container {
                 justify-content: flex-start;
             }
@@ -333,7 +337,7 @@
             .profile-main {
                 grid-template-columns: 1fr;
             }
-            
+
             .profile-left {
                 border-right: none;
                 border-bottom: 1px solid #eee;
@@ -342,75 +346,51 @@
             .profile-header {
                 justify-content: center;
             }
-            
+
             .qr-container {
                 justify-content: center;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <nav class="nav-bar">
-            <div class="nav-title">Student Profiles</div>
+        <div class="nav-bar">
+            <div class="nav-title">GauntletAI Challengers</div>
             <div class="nav-links">
-                <a href="profile_card.html">All Students</a>
-                <a href="#">Home</a>
+                <a href="/pages">All Challengers</a>
+                <a href="https://www.gauntletai.com" target="_blank">About GauntletAI</a>
             </div>
-        </nav>
+        </div>
 
-        <div class="profile-card">
+        <div id="profile-card" class="profile-card">
             <div class="profile-header">
-                <div class="social-links">
-                    <a href="https://github.com/malibuwileyu" target="_blank">GitHub</a>
-                    <a href="https://www.linkedin.com/in/ryan-w-heron" target="_blank">LinkedIn</a>
+                <div class="social-links" id="social-links">
+                    <!-- Social links will be dynamically added here -->
                 </div>
             </div>
 
             <div class="profile-main">
                 <div class="profile-left">
                     <div class="profile-pic-container">
-                        <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Profile Picture" class="profile-pic">
+                        <img id="profile-pic" src="https://randomuser.me/api/portraits/lego/1.jpg" alt="Profile picture"
+                            class="profile-pic">
                     </div>
-                    <h1 class="profile-name">Ryan Heron</h1>
-                    <div class="profile-title">Software Engineer</div>
-                    
-                    <!-- Top skills list in left column -->
+                    <h2 id="profile-name" class="profile-name">Loading...</h2>
+                    <div id="profile-title" class="profile-title">Loading...</div>
+
                     <div class="left-section-container">
-                        <h3 class="left-section-title">Top Skills</h3>
-                        <ul class="left-skills-list">
-                            <li class="left-skill-item">
-                                <span class="left-skill-icon">✓</span>
-                                <span class="left-skill-text">JavaScript</span>
-                            </li>
-                            <li class="left-skill-item">
-                                <span class="left-skill-icon">✓</span>
-                                <span class="left-skill-text">React</span>
-                            </li>
-                            <li class="left-skill-item">
-                                <span class="left-skill-icon">✓</span>
-                                <span class="left-skill-text">Python</span>
-                            </li>
-                            <li class="left-skill-item">
-                                <span class="left-skill-icon">✓</span>
-                                <span class="left-skill-text">Docker</span>
-                            </li>
-                            <li class="left-skill-item">
-                                <span class="left-skill-icon">✓</span>
-                                <span class="left-skill-text">AWS</span>
-                            </li>
+                        <h3 class="left-section-title">Skills</h3>
+                        <ul id="skills-list" class="left-skills-list">
+                            <!-- Skills will be dynamically added here -->
                         </ul>
                     </div>
-                    
-                    <!-- Project tags now in left column -->
+
                     <div class="left-section-container">
                         <h3 class="left-section-title">Project Tags</h3>
-                        <div class="left-tags-list">
-                            <span class="left-tag">Robotics</span>
-                            <span class="left-tag">React</span>
-                            <span class="left-tag">Amplify</span>
-                            <span class="left-tag">UI/UX</span>
-                            <span class="left-tag">Docker</span>
+                        <div id="tags-list" class="left-tags-list">
+                            <!-- Project tags will be dynamically added here -->
                         </div>
                     </div>
                 </div>
@@ -420,71 +400,41 @@
                     <div class="about-qr-container">
                         <div class="about-section">
                             <h3 class="metadata-title">About</h3>
-                            <p class="metadata-content">
-                                Experienced software engineer specialized in building scalable web applications and robotics interfaces. 
-                                Currently working on advanced UI systems for robot control.
-                            </p>
+                            <p id="bio-content" class="metadata-content">Loading challenger information...</p>
                         </div>
-                        
+
                         <div class="qr-container">
-                            <div class="qr-item">
-                                <img id="github-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://github.com/malibuwileyu" alt="GitHub QR" class="qr-code">
+                            <div class="qr-item" id="github-qr-container">
+                                <img id="github-qr" src="" alt="GitHub QR" class="qr-code">
                                 <div class="qr-label">GitHub</div>
                             </div>
-                            <div class="qr-item">
-                                <img id="linkedin-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://www.linkedin.com/in/ryan-w-heron" alt="LinkedIn QR" class="qr-code">
+                            <div class="qr-item" id="linkedin-qr-container">
+                                <img id="linkedin-qr" src="" alt="LinkedIn QR" class="qr-code">
                                 <div class="qr-label">LinkedIn</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Social Profiles Integration -->
+                    <!-- Projects section -->
+                    <div class="projects-section">
+                        <h3 class="section-title">Projects</h3>
+                        <div id="projects-container" class="projects-container">
+                            <div class="loading-indicator">
+                                <div class="loading-spinner"></div>
+                                <p>Loading projects...</p>
+                            </div>
+                            <!-- Projects will be dynamically added here -->
+                        </div>
+                    </div>
+
+                    <!-- Social integration section (GitHub or LinkedIn)  -->
                     <div class="social-profiles">
-                        <div class="profile-switcher"
-                             data-linkedin-username="ryan-w-heron" 
-                             data-github-username="malibuwileyu"
-                             data-alt-linkedin-username="thomas-davidson-47581315b"
-                             data-alt-github-username="theRealThomasDavidson">
-                            <button id="profileToggle" class="profile-toggle-btn">Switch Profile</button>
-                            <span id="currentProfile">Current: Ryan Heron</span>
-                        </div>
-
-                        <div class="github-container">
+                        <div class="github-container" id="github-container">
                             <div class="profile-section">
-                                <iframe
-                                    id="github-stats"
-                                    src="https://github-readme-stats.vercel.app/api?username=malibuwileyu&show_icons=true&theme=default"
-                                    frameborder="0"
-                                    scrolling="no"
-                                    width="100%"
-                                    height="200"
-                                    class="github-stats">
-                                </iframe>
-                            </div>
-                            <div class="contrib-section">
-                                <h3>Contribution Activity</h3>
-                                <img 
-                                    id="github-contrib"
-                                    src="https://ghchart.rshah.org/malibuwileyu" 
-                                    alt="GitHub Contribution Graph" 
-                                    class="github-contrib-chart">
-                            </div>
-                            <div class="repo-section">
-                                <iframe
-                                    id="github-langs"
-                                    src="https://github-readme-stats.vercel.app/api/top-langs/?username=malibuwileyu&layout=compact&theme=default"
-                                    frameborder="0"
-                                    scrolling="no"
-                                    width="100%"
-                                    height="150"
-                                    class="github-langs">
-                                </iframe>
-                            </div>
-                        </div>
-
-                        <div class="linkedin-container">
-                            <div class="profile-section">
-                                <!-- LinkedIn badge will be dynamically inserted here -->
+                                <h3>GitHub Stats</h3>
+                                <div id="github-stats-container" class="github-stats-container">
+                                    <!-- GitHub stats will be dynamically added here if GitHub username is available -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -493,143 +443,530 @@
         </div>
     </div>
 
-    <!-- LinkedIn Scripts -->
-    <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
-    <script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
+    <!-- Voice-enabled AI Chatbot (same as the list page) -->
+    <div class="chatbot-container" id="chatbot-container">
+        <div class="chatbot-header">
+            <h3>AI Assistant</h3>
+            <button id="close-chatbot" class="close-chatbot">×</button>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <div class="bot-message">
+                <p>Hi there! I can help you find information about this challenger and their projects. What would you
+                    like to know?</p>
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <textarea id="user-input" placeholder="Type your message..."></textarea>
+            <button id="voice-input" class="voice-input-btn">
+                <span class="mic-icon">🎤</span>
+            </button>
+            <button id="send-message" class="send-btn">Send</button>
+        </div>
+        <div class="voice-indicator hidden" id="voice-indicator">
+            <div class="voice-waves">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <p>Listening...</p>
+            <button id="stop-voice" class="stop-voice-btn">Stop</button>
+        </div>
+    </div>
 
-    <!-- Profile Switching Script -->
+    <button id="open-chatbot" class="open-chatbot-btn">
+        <span class="chat-icon">💬</span>
+        <span class="chat-text">Ask About This Challenger</span>
+    </button>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const switcherDiv = document.querySelector('.profile-switcher');
-            const toggleBtn = document.getElementById('profileToggle');
-            const currentProfileSpan = document.getElementById('currentProfile');
-            const profileName = document.querySelector('.profile-name');
-            const profileImage = document.querySelector('.profile-pic');
-            const githubQR = document.getElementById('github-qr');
-            const linkedinQR = document.getElementById('linkedin-qr');
-            const githubLink = document.querySelector('.social-links a:first-child');
-            const linkedinLink = document.querySelector('.social-links a:last-child');
-            
-            let isAltProfile = false;
-            
-            // Set initial LinkedIn username to match the data attribute
-            const initialLinkedinUsername = switcherDiv.getAttribute('data-linkedin-username');
-            const linkedinContainer = document.querySelector('.linkedin-container .profile-section');
-            linkedinContainer.innerHTML = `
-                <div 
-                    class="badge-base LI-profile-badge" 
-                    data-locale="en_US" 
-                    data-size="large" 
-                    data-theme="light" 
-                    data-type="HORIZONTAL" 
-                    data-vanity="${initialLinkedinUsername}" 
-                    data-version="v1">
-                </div>
-            `;
-            
-            // Initial setup after a slight delay to ensure LinkedIn API has loaded
-            setTimeout(function() {
-                updateProfiles();
-            }, 500);
-            
-            // Toggle button handler
-            toggleBtn.addEventListener('click', function() {
-                isAltProfile = !isAltProfile;
-                toggleBtn.disabled = true;
-                toggleBtn.textContent = "Switching...";
-                
-                // Show loading indication
-                currentProfileSpan.textContent = "Loading profile...";
-                
-                // Update profiles with a delay to show loading state
-                setTimeout(function() {
-                    updateProfiles();
-                    toggleBtn.disabled = false;
-                    toggleBtn.textContent = "Switch Profile";
-                }, 300);
-            });
-            
-            function updateProfiles() {
-                // Get the right set of usernames
-                const githubUsername = isAltProfile ? 
-                    switcherDiv.getAttribute('data-alt-github-username') : 
-                    switcherDiv.getAttribute('data-github-username');
-                
-                const linkedinUsername = isAltProfile ? 
-                    switcherDiv.getAttribute('data-alt-linkedin-username') : 
-                    switcherDiv.getAttribute('data-linkedin-username');
-                
-                // Update display name and profile details
-                if (isAltProfile) {
-                    profileName.textContent = "Thomas Davidson";
-                    currentProfileSpan.textContent = "Current: Thomas Davidson";
-                    // Change the profile image when switching to Thomas
-                    profileImage.src = "https://randomuser.me/api/portraits/men/32.jpg";
-                } else {
-                    profileName.textContent = "Ryan Heron";
-                    currentProfileSpan.textContent = "Current: Ryan Heron";
-                    // Change back to Ryan's image
-                    profileImage.src = "https://randomuser.me/api/portraits/men/11.jpg";
+        // API Endpoints
+        const API_BASE_URL = '/api';
+        const API_PROFILES = `${API_BASE_URL}/profiles`;
+        const API_PROJECTS = `${API_BASE_URL}/projects`;
+
+        // Get profile ID from URL
+        function getProfileIdFromUrl() {
+            // Extract challenger ID from URL path - format: /pages/challenger/ID
+            const pathParts = window.location.pathname.split('/');
+            // The ID should be the last part of the URL
+            return pathParts[pathParts.length - 1];
+        }
+
+        // Fetch profile data
+        async function fetchProfileData(profileId) {
+            try {
+                const response = await fetch(`${API_PROFILES}/${profileId}`);
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
                 }
-                
-                // Update links
-                githubLink.href = `https://github.com/${githubUsername}`;
-                linkedinLink.href = `https://www.linkedin.com/in/${linkedinUsername}`;
-                
-                // Update both QR codes
-                githubQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://github.com/${githubUsername}`;
-                linkedinQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://www.linkedin.com/in/${linkedinUsername}`;
-                
-                // Set GitHub URLs for iframes and images
-                document.getElementById('github-stats').src = 
-                    `https://github-readme-stats.vercel.app/api?username=${githubUsername}&show_icons=true&theme=default`;
-                
-                document.getElementById('github-contrib').src = 
-                    `https://ghchart.rshah.org/${githubUsername}`;
-                
-                document.getElementById('github-langs').src = 
-                    `https://github-readme-stats.vercel.app/api/top-langs/?username=${githubUsername}&layout=compact&theme=default`;
-                
-                // Force LinkedIn badge to completely refresh
-                completelyRefreshLinkedIn(linkedinUsername);
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    return result.data;
+                } else {
+                    throw new Error('Invalid data format received from API');
+                }
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+                return null;
             }
-            
-            function completelyRefreshLinkedIn(username) {
-                // Get the profile section container
-                const linkedinContainer = document.querySelector('.linkedin-container .profile-section');
-                
-                // Completely replace with new content
-                linkedinContainer.innerHTML = `
-                    <div 
-                        class="badge-base LI-profile-badge" 
-                        data-locale="en_US" 
-                        data-size="large" 
-                        data-theme="light" 
-                        data-type="HORIZONTAL" 
-                        data-vanity="${username}" 
-                        data-version="v1">
-                    </div>
-                `;
-                
-                // Reload LinkedIn scripts by removing and re-adding them
-                const oldScripts = document.querySelectorAll('script[src*="platform.linkedin.com"]');
-                oldScripts.forEach(script => script.remove());
-                
-                // Add new scripts
-                const scriptIN = document.createElement('script');
-                scriptIN.src = "https://platform.linkedin.com/in.js";
-                scriptIN.type = "text/javascript";
-                scriptIN.innerHTML = "lang: en_US";
-                document.body.appendChild(scriptIN);
-                
-                const scriptBadge = document.createElement('script');
-                scriptBadge.src = "https://platform.linkedin.com/badges/js/profile.js";
-                scriptBadge.async = true;
-                scriptBadge.defer = true;
-                scriptBadge.type = "text/javascript";
-                document.body.appendChild(scriptBadge);
+        }
+
+        // Fetch projects for a profile
+        async function fetchProfileProjects(profileId) {
+            try {
+                const response = await fetch(`${API_PROFILES}/${profileId}/projects`);
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                const result = await response.json();
+
+                if (result.success && Array.isArray(result.data)) {
+                    return result.data;
+                } else {
+                    throw new Error('Invalid data format received from API');
+                }
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+                return [];
             }
-        });
+        }
+
+        // Utility function to extract username from URL
+        function extractUsernameFromUrl(url) {
+            if (!url) return null;
+
+            try {
+                const urlObj = new URL(url);
+
+                // GitHub URL format: https://github.com/username
+                if (urlObj.hostname === 'github.com') {
+                    const path = urlObj.pathname.split('/').filter(Boolean);
+                    return path.length > 0 ? path[0] : null;
+                }
+
+                // LinkedIn URL format: https://linkedin.com/in/username
+                if (urlObj.hostname === 'linkedin.com' || urlObj.hostname === 'www.linkedin.com') {
+                    const path = urlObj.pathname.split('/').filter(Boolean);
+                    return path.length > 1 && path[0] === 'in' ? path[1] : null;
+                }
+
+                return null;
+            } catch (error) {
+                console.error('Error extracting username:', error);
+                return null;
+            }
+        }
+
+        // Populate profile data in the UI
+        function populateProfileData(profile) {
+            if (!profile) {
+                document.title = 'Profile Not Found - GauntletAI Challengers';
+                document.getElementById('profile-name').textContent = 'Profile Not Found';
+                document.getElementById('profile-title').textContent = 'The requested profile could not be found';
+                document.getElementById('bio-content').textContent = 'Please go back to the challengers list and select a valid profile.';
+                return;
+            }
+
+            // Update page title
+            document.title = `${profile.name} - GauntletAI Challenger`;
+
+            // Update profile picture
+            const profilePic = document.getElementById('profile-pic');
+            if (profile.pic_url) {
+                profilePic.src = profile.pic_url;
+                profilePic.alt = profile.name;
+            }
+
+            // Update profile name and title
+            document.getElementById('profile-name').textContent = profile.name;
+            document.getElementById('profile-title').textContent = profile.blurb || 'GauntletAI Challenger';
+
+            // Update bio content
+            document.getElementById('bio-content').textContent = profile.bio || 'No bio available';
+
+            // Populate skills list
+            const skillsList = document.getElementById('skills-list');
+            skillsList.innerHTML = '';
+
+            if (profile.skills && profile.skills.length > 0) {
+                profile.skills.forEach(skill => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'left-skill-item';
+
+                    listItem.innerHTML = `
+                        <span class="left-skill-icon">•</span>
+                        <span class="left-skill-text">${skill}</span>
+                    `;
+
+                    skillsList.appendChild(listItem);
+                });
+            } else {
+                const listItem = document.createElement('li');
+                listItem.className = 'left-skill-item';
+                listItem.innerHTML = '<span class="left-skill-text">No skills listed</span>';
+                skillsList.appendChild(listItem);
+            }
+
+            // Populate social links
+            const socialLinks = document.getElementById('social-links');
+            socialLinks.innerHTML = '';
+
+            if (profile.github_url) {
+                const githubLink = document.createElement('a');
+                githubLink.href = profile.github_url;
+                githubLink.target = '_blank';
+                githubLink.textContent = 'GitHub';
+                socialLinks.appendChild(githubLink);
+
+                // Generate GitHub QR code
+                const githubQr = document.getElementById('github-qr');
+                githubQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(profile.github_url)}`;
+
+                // Try to set up GitHub stats
+                const githubUsername = extractUsernameFromUrl(profile.github_url);
+                if (githubUsername) {
+                    const githubStatsContainer = document.getElementById('github-stats-container');
+                    githubStatsContainer.innerHTML = `
+                        <iframe
+                            src="https://github-readme-stats.vercel.app/api?username=${githubUsername}&show_icons=true&theme=default"
+                            frameborder="0"
+                            scrolling="no"
+                            width="100%"
+                            height="200"
+                            class="github-stats">
+                        </iframe>
+                        <div class="contrib-section">
+                            <h4>Contribution Activity</h4>
+                            <img 
+                                src="https://ghchart.rshah.org/${githubUsername}" 
+                                alt="GitHub Contribution Graph" 
+                                class="github-contrib-chart">
+                        </div>
+                    `;
+                }
+            } else {
+                document.getElementById('github-qr-container').style.display = 'none';
+            }
+
+            if (profile.linkedin_url) {
+                const linkedinLink = document.createElement('a');
+                linkedinLink.href = profile.linkedin_url;
+                linkedinLink.target = '_blank';
+                linkedinLink.textContent = 'LinkedIn';
+                socialLinks.appendChild(linkedinLink);
+
+                // Generate LinkedIn QR code
+                const linkedinQr = document.getElementById('linkedin-qr');
+                linkedinQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(profile.linkedin_url)}`;
+            } else {
+                document.getElementById('linkedin-qr-container').style.display = 'none';
+            }
+
+            if (profile.twitter_url || profile.gauntlet_url) {
+                if (profile.twitter_url) {
+                    const twitterLink = document.createElement('a');
+                    twitterLink.href = profile.twitter_url;
+                    twitterLink.target = '_blank';
+                    twitterLink.textContent = 'Twitter';
+                    socialLinks.appendChild(twitterLink);
+                }
+
+                if (profile.gauntlet_url) {
+                    const gauntletLink = document.createElement('a');
+                    gauntletLink.href = profile.gauntlet_url;
+                    gauntletLink.target = '_blank';
+                    gauntletLink.textContent = 'GauntletAI';
+                    socialLinks.appendChild(gauntletLink);
+                }
+            }
+        }
+
+        // Create project card
+        function createProjectCard(project) {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+
+            // Create tags list HTML
+            let techsHtml = '';
+            if (project.techs && project.techs.length > 0) {
+                techsHtml = project.techs.map(tech => `<span class="project-tag">${tech}</span>`).join('');
+            }
+
+            // Create links HTML
+            let linksHtml = '';
+            if (project.github_url) {
+                linksHtml += `<a href="${project.github_url}" target="_blank" class="project-link github-link">GitHub</a>`;
+            }
+            if (project.deploy_url) {
+                linksHtml += `<a href="${project.deploy_url}" target="_blank" class="project-link demo-link">Live Demo</a>`;
+            }
+
+            card.innerHTML = `
+                <div class="project-header">
+                    <h3 class="project-title">${project.title}</h3>
+                    <div class="project-techs">${techsHtml}</div>
+                </div>
+                
+                ${project.screenshot_url ?
+                    `<div class="project-screenshot">
+                        <img src="${project.screenshot_url}" alt="${project.title} screenshot" loading="lazy">
+                    </div>` : ''}
+                
+                <div class="project-description">${project.description}</div>
+                
+                ${linksHtml ? `<div class="project-links">${linksHtml}</div>` : ''}
+                
+                ${project.video_url ?
+                    `<div class="project-video">
+                        <iframe src="${project.video_url}" frameborder="0" allowfullscreen></iframe>
+                    </div>` : ''}
+            `;
+
+            return card;
+        }
+
+        // Populate projects data
+        function populateProjectsData(projects, profile) {
+            const projectsContainer = document.getElementById('projects-container');
+            projectsContainer.innerHTML = '';
+
+            // Create unified list of all technologies for the tags section
+            const allTechs = new Set();
+
+            if (projects.length === 0) {
+                const noProjects = document.createElement('div');
+                noProjects.className = 'no-projects-message';
+                noProjects.textContent = 'No projects available for this challenger.';
+                projectsContainer.appendChild(noProjects);
+            } else {
+                // Append project cards
+                projects.forEach(project => {
+                    // Add project techs to the unified list
+                    if (project.techs && Array.isArray(project.techs)) {
+                        project.techs.forEach(tech => allTechs.add(tech));
+                    }
+
+                    const card = createProjectCard(project);
+                    projectsContainer.appendChild(card);
+                });
+            }
+
+            // Populate tags list with all unique technologies
+            const tagsList = document.getElementById('tags-list');
+            tagsList.innerHTML = '';
+
+            if (allTechs.size > 0) {
+                Array.from(allTechs).forEach(tech => {
+                    const tag = document.createElement('span');
+                    tag.className = 'left-tag';
+                    tag.textContent = tech;
+                    tagsList.appendChild(tag);
+                });
+            } else {
+                const noTags = document.createElement('span');
+                noTags.className = 'left-tag muted';
+                noTags.textContent = 'No tags available';
+                tagsList.appendChild(noTags);
+            }
+        }
+
+        // AI Chatbot functionality
+        function setupChatbot() {
+            const openChatbotBtn = document.getElementById('open-chatbot');
+            const closeChatbotBtn = document.getElementById('close-chatbot');
+            const chatbotContainer = document.getElementById('chatbot-container');
+            const chatMessages = document.getElementById('chatbot-messages');
+            const userInput = document.getElementById('user-input');
+            const sendMessageBtn = document.getElementById('send-message');
+            const voiceInputBtn = document.getElementById('voice-input');
+            const stopVoiceBtn = document.getElementById('stop-voice');
+            const voiceIndicator = document.getElementById('voice-indicator');
+
+            // Current profile and projects context for the chatbot
+            let currentProfile = null;
+            let currentProjects = [];
+
+            let isListening = false;
+
+            // Toggle chatbot visibility
+            openChatbotBtn.addEventListener('click', () => {
+                chatbotContainer.classList.add('active');
+                openChatbotBtn.classList.add('hidden');
+            });
+
+            closeChatbotBtn.addEventListener('click', () => {
+                chatbotContainer.classList.remove('active');
+                openChatbotBtn.classList.remove('hidden');
+            });
+
+            // Set the context for the chatbot
+            window.setChatbotContext = function (profile, projects) {
+                currentProfile = profile;
+                currentProjects = projects;
+            };
+
+            // Send message functionality
+            function sendMessage() {
+                const messageText = userInput.value.trim();
+                if (!messageText) return;
+
+                // Add user message to chat
+                addMessageToChat('user', messageText);
+
+                // Clear input
+                userInput.value = '';
+
+                // Process the message
+                processUserMessage(messageText);
+            }
+
+            sendMessageBtn.addEventListener('click', sendMessage);
+
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Add message to chat window
+            function addMessageToChat(sender, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = sender === 'user' ? 'user-message' : 'bot-message';
+
+                const messagePara = document.createElement('p');
+                messagePara.textContent = text;
+
+                messageDiv.appendChild(messagePara);
+                chatMessages.appendChild(messageDiv);
+
+                // Auto-scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Process user message and generate response
+            async function processUserMessage(message) {
+                // Show typing indicator
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'bot-message typing';
+                typingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+                chatMessages.appendChild(typingDiv);
+
+                try {
+                    // In a real app, this would be a call to your AI backend with the message and context
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    // Remove typing indicator
+                    chatMessages.removeChild(typingDiv);
+
+                    // Generate a simple response based on available context
+                    let response = "I'm a placeholder AI assistant. In the real implementation, I would provide intelligent responses about this challenger and their projects.";
+
+                    if (currentProfile) {
+                        if (message.toLowerCase().includes('skill') || message.toLowerCase().includes('skills')) {
+                            if (currentProfile.skills && currentProfile.skills.length > 0) {
+                                response = `${currentProfile.name}'s skills include: ${currentProfile.skills.join(', ')}`;
+                            } else {
+                                response = `${currentProfile.name} hasn't listed any skills yet.`;
+                            }
+                        } else if (message.toLowerCase().includes('project') || message.toLowerCase().includes('projects')) {
+                            if (currentProjects && currentProjects.length > 0) {
+                                response = `${currentProfile.name} has ${currentProjects.length} project(s). The projects are: ${currentProjects.map(p => p.title).join(', ')}`;
+                            } else {
+                                response = `${currentProfile.name} hasn't added any projects yet.`;
+                            }
+                        } else if (message.toLowerCase().includes('contact') || message.toLowerCase().includes('social')) {
+                            const socialLinks = [];
+                            if (currentProfile.github_url) socialLinks.push('GitHub');
+                            if (currentProfile.linkedin_url) socialLinks.push('LinkedIn');
+                            if (currentProfile.twitter_url) socialLinks.push('Twitter');
+
+                            if (socialLinks.length > 0) {
+                                response = `You can contact ${currentProfile.name} via their ${socialLinks.join(', ')}, which you can find in the profile above.`;
+                            } else {
+                                response = `${currentProfile.name} hasn't provided any contact information.`;
+                            }
+                        } else if (message.toLowerCase().includes('who') || message.toLowerCase().includes('about')) {
+                            response = currentProfile.bio || `${currentProfile.name} is a GauntletAI Challenger.`;
+                        }
+                    }
+
+                    // Add bot response to chat
+                    addMessageToChat('bot', response);
+
+                } catch (error) {
+                    console.error('Error processing message:', error);
+                    chatMessages.removeChild(typingDiv);
+                    addMessageToChat('bot', "I'm having trouble connecting to my brain right now. Please try again later.");
+                }
+            }
+
+            // Voice input functionality (similar to the list page)
+            voiceInputBtn.addEventListener('click', () => {
+                if (!isListening) {
+                    startVoiceRecognition();
+                }
+            });
+
+            stopVoiceBtn.addEventListener('click', () => {
+                if (isListening) {
+                    stopVoiceRecognition();
+                }
+            });
+
+            function startVoiceRecognition() {
+                isListening = true;
+                voiceIndicator.classList.remove('hidden');
+
+                // Simulate recording for demo
+                setTimeout(() => {
+                    if (isListening) {
+                        stopVoiceRecognition();
+                        userInput.value = "What projects has this challenger worked on?";
+                    }
+                }, 3000);
+            }
+
+            function stopVoiceRecognition() {
+                isListening = false;
+                voiceIndicator.classList.add('hidden');
+            }
+        }
+
+        // Initialize the page
+        async function initializePage() {
+            // Get profile ID from URL
+            const profileId = getProfileIdFromUrl();
+
+            if (!profileId) {
+                // Handle missing profile ID
+                document.getElementById('profile-name').textContent = 'Profile Not Found';
+                document.getElementById('profile-title').textContent = 'No profile ID provided';
+                document.getElementById('bio-content').textContent = 'Please go back to the challengers list and select a profile.';
+                return;
+            }
+
+            // Fetch profile data
+            const profile = await fetchProfileData(profileId);
+
+            // Populate profile information
+            populateProfileData(profile);
+
+            // Fetch projects for the profile
+            const projects = await fetchProfileProjects(profileId);
+
+            // Populate projects information
+            populateProjectsData(projects, profile);
+
+            // Set up chatbot with context
+            setupChatbot();
+
+            // Set chatbot context
+            window.setChatbotContext(profile, projects);
+        }
+
+        // Start the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
-</html> 
+
+</html>
