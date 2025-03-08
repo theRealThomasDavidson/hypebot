@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Explorer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .function-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .function-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+
+        .function-name {
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .function-description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .function-category {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Debug Panel Styles */
+        #debug-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: #1a1a1a;
+            color: #fff;
+            font-family: monospace;
+            padding: 10px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        #debug-content {
+            margin: 0;
+            padding: 0;
+        }
+
+        .debug-controls {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+        }
+
+        .debug-clear {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .debug-clear:hover {
+            background: #444;
+        }
+    </style>
+</head>
+<body>
+    <!-- Debug Panel -->
+    <div id="debug-panel">
+        <div class="debug-controls">
+            <button class="debug-clear" onclick="clearDebugPanel()">Clear</button>
+        </div>
+        <div id="debug-content"></div>
+    </div>
+
+    <div class="container">
+        <h1>JavaScript Function Explorer</h1>
+        <input type="text" class="search-box" placeholder="Search functions..." id="searchInput">
+        <ul class="function-list" id="functionList">
+            <!-- Core Functions -->
+            <li class="function-item">
+                <div class="function-name">fetchProfiles()</div>
+                <div class="function-description">Fetches profile data from the CHALLENGERS constant.</div>
+                <span class="function-category">Core</span>
+            </li>
+            <li class="function-item">
+                <div class="function-name">formatProfileForDisplay(profile)</div>
+                <div class="function-description">Formats raw profile data into a standardized display format.</div>
+                <span class="function-category">Core</span>
+            </li>
+
+            <!-- UI Functions -->
+            <li class="function-item">
+                <div class="function-name">createCardElement(profile, index)</div>
+                <div class="function-description">Creates a DOM element for a profile card.</div>
+                <span class="function-category">UI</span>
+            </li>
+            <li class="function-item">
+                <div class="function-name">createFeaturedCardElement(profile)</div>
+                <div class="function-description">Creates a DOM element for a featured profile card.</div>
+                <span class="function-category">UI</span>
+            </li>
+
+            <!-- Search Functions -->
+            <li class="function-item">
+                <div class="function-name">performBasicSearch(searchTerm, nameOnly)</div>
+                <div class="function-description">Performs basic text-based search on profiles.</div>
+                <span class="function-category">Search</span>
+            </li>
+            <li class="function-item">
+                <div class="function-name">performSemanticSearch(searchTerm)</div>
+                <div class="function-description">Performs AI-enhanced semantic search on profiles.</div>
+                <span class="function-category">Search</span>
+            </li>
+
+            <!-- Display Functions -->
+            <li class="function-item">
+                <div class="function-name">displayProfiles(profiles)</div>
+                <div class="function-description">Displays a list of profiles in the main grid.</div>
+                <span class="function-category">Display</span>
+            </li>
+            <li class="function-item">
+                <div class="function-name">displayAISearchResults(profiles, searchTerm)</div>
+                <div class="function-description">Displays AI-enhanced search results with featured section.</div>
+                <span class="function-category">Display</span>
+            </li>
+
+            <!-- Utility Functions -->
+            <li class="function-item">
+                <div class="function-name">shuffleArray(array)</div>
+                <div class="function-description">Randomizes the order of elements in an array.</div>
+                <span class="function-category">Utility</span>
+            </li>
+            <li class="function-item">
+                <div class="function-name">lazyLoadImages()</div>
+                <div class="function-description">Implements lazy loading for profile images.</div>
+                <span class="function-category">Utility</span>
+            </li>
+            <li class="function-item">
+                <div class="function-name">clearProfileCards()</div>
+                <div class="function-description">Clears all profile cards from the display.</div>
+                <span class="function-category">Utility</span>
+            </li>
+
+            <!-- Setup Functions -->
+            <li class="function-item">
+                <div class="function-name">setupSearch()</div>
+                <div class="function-description">Sets up search functionality and event listeners.</div>
+                <span class="function-category">Setup</span>
+            </li>
+            <li class="function-item">
+                <div class="function-name">setupBackToTop()</div>
+                <div class="function-description">Sets up the back-to-top button functionality.</div>
+                <span class="function-category">Setup</span>
+            </li>
+
+            <!-- Error Handling -->
+            <li class="function-item">
+                <div class="function-name">showError(message)</div>
+                <div class="function-description">Displays error messages to the user.</div>
+                <span class="function-category">Error</span>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        // Debug panel functionality
+        const debugPanel = document.getElementById('debug-panel');
+        const debugContent = document.getElementById('debug-content');
+        debugPanel.style.display = 'block'; // Make debug panel visible
+
+        function clearDebugPanel() {
+            debugContent.innerHTML = '';
+        }
+
+        // Override console.log and console.error
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            const message = args.map(arg => {
+                if (typeof arg === 'object') {
+                    return JSON.stringify(arg, null, 2);
+                }
+                return String(arg);
+            }).join(' ');
+            debugContent.innerHTML += `<div style="color: #00ff00;">[LOG] ${message}</div>`;
+            debugPanel.scrollTop = debugPanel.scrollHeight;
+        };
+
+        console.error = function(...args) {
+            originalConsoleError.apply(console, args);
+            const message = args.map(arg => {
+                if (arg instanceof Error) {
+                    return arg.stack || arg.message;
+                }
+                if (typeof arg === 'object') {
+                    return JSON.stringify(arg, null, 2);
+                }
+                return String(arg);
+            }).join(' ');
+            debugContent.innerHTML += `<div style="color: #ff0000;">[ERROR] ${message}</div>`;
+            debugPanel.scrollTop = debugPanel.scrollHeight;
+        };
+
+        // Simple search functionality
+        const searchInput = document.getElementById('searchInput');
+        const functionList = document.getElementById('functionList');
+        const functionItems = functionList.getElementsByClassName('function-item');
+
+        console.log('Function Explorer initialized');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            console.log('Searching for:', searchTerm);
+
+            Array.from(functionItems).forEach(item => {
+                const functionName = item.querySelector('.function-name').textContent.toLowerCase();
+                const functionDesc = item.querySelector('.function-description').textContent.toLowerCase();
+                const shouldShow = functionName.includes(searchTerm) || functionDesc.includes(searchTerm);
+                item.style.display = shouldShow ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html> 

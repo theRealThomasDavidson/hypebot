@@ -28,6 +28,14 @@ const getImageAsBase64 = async (url) => {
 
 // Function to read file and replace placeholders
 const serveFormattedHtml = (filePath, res, replace_data) => {
+    // Log user agent info
+    const userAgent = res.req.headers['user-agent'];
+    console.log('\nRequest Details:');
+    console.log('User Agent:', userAgent);
+    console.log('Path:', filePath);
+    console.log('Time:', new Date().toISOString());
+    console.log('-------------------');
+
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading file:', err);
@@ -46,6 +54,7 @@ const serveFormattedHtml = (filePath, res, replace_data) => {
 };
 
 const challengers_list = async (req, res) => {
+    console.log('\nServing Challengers List Page');
     const filePath = path.join(PAGES_DIR, 'challengers_list.html');
     try {
         const profiles = await fetchAllProfiles();
@@ -77,8 +86,16 @@ const challenger_profile = (req, res) => {
     serveFormattedHtml(filePath, res,);
 };
 
+const function_explorer = (req, res) => {
+    const filePath = path.join(PAGES_DIR, 'function_explorer.html');
+    serveFormattedHtml(filePath, res, {
+        HOSTED_REPLACE_URL: HOSTED_URL
+    });
+};
+
 // Export functions directly to avoid any module loading issues
 module.exports = {
     challengers_list,
     challenger_profile,
+    function_explorer,
 };

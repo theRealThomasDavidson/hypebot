@@ -10,6 +10,12 @@ if (!pagesController.challengers_list || !pagesController.challenger_profile) {
                   Object.keys(pagesController));
 }
 
+/**
+ * @route   GET /pages/function
+ * @desc    View the function explorer page
+ * @access  Public
+ */
+router.get('/function', pagesController.function_explorer);
 
 /**
  * @route   GET /pages/challenger_profile/:challenger_id
@@ -24,4 +30,5 @@ router.get('/challenger/:challenger_id', pagesController.challenger_profile);
  * @access  Public
  */
 router.get('/:id', pagesController.challengers_list);
+router.get('/', pagesController.challengers_list);
 module.exports = router;
