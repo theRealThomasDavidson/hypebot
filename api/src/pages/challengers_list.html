@@ -825,9 +825,9 @@
             card.style.animationDelay = `${index * 30}ms`;
 
             card.innerHTML = `
-                <div class="card-img-container">
+                <!--<div class="card-img-container">
                     <img src="${profile.image}" alt="${profile.name}" class="card-img">
-                </div>
+                </div>-->
                 <div class="card-content">
                     <h3 class="card-name">${profile.name}</h3>
                     <div class="card-title">${profile.title}</div>
@@ -840,20 +840,15 @@
 
         // Create featured profile card
         function createFeaturedCardElement(profile) {
-            console.log('Creating featured card for profile:', profile.name);
-            console.log('Image data:', profile.image);
-            console.log('Image data type:', typeof profile.image);
-            console.log('Image data length:', profile.image ? profile.image.length : 0);
-
             const card = document.createElement('div');
             card.className = 'featured-card';
             const matchPercent = Math.floor(Math.random() * 20) + 80;
 
             card.innerHTML = `
-                <div class="featured-img-container">
+                <!--<div class="featured-img-container">
                     <img src="${profile.image}" alt="${profile.name}" class="featured-img" onerror="console.log('Featured image failed to load:', this.src);">
                     <div class="match-percent">${matchPercent}% match</div>
-                </div>
+                </div>-->
                 <div class="card-content">
                     <h3 class="card-name">${profile.name}</h3>
                     <div class="card-title">${profile.title}</div>
