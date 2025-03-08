@@ -703,6 +703,26 @@
 
 <body>
     <div class="container">
+        <!-- Add debug panel -->
+        <div id="debug-panel" style="
+            background: #1e1e1e;
+            color: #00ff00;
+            font-family: monospace;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            display: none;
+        ">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #fff; font-weight: bold;">Debug Panel</span>
+                <button onclick="clearDebugPanel()" style="background: #333; color: #fff; border: none; padding: 2px 8px; cursor: pointer;">Clear</button>
+            </div>
+            <div id="debug-content"></div>
+        </div>
         <header>
             <h1>GauntletAI Challengers</h1>
             <p>Discover talented developers and their projects from the GauntletAI program</p>
@@ -784,10 +804,8 @@
 
         // Format profile data for display
         function formatProfileForDisplay(profile) {
-            console.log('Raw profile data:', profile);
-            console.log('Profile image:', profile.image);
-            console.log('Profile pic_url:', profile.pic_url);
-
+            console.log('Loading profile:', profile.name);
+            
             return {
                 id: profile.id,
                 name: profile.name,
@@ -1270,35 +1288,103 @@
             });
         }
 
+        // Add debug panel functionality
+        const debugPanel = document.getElementById('debug-panel');
+        const debugContent = document.getElementById('debug-content');
+        debugPanel.style.display = 'block'; // Make debug panel visible
+
+        function clearDebugPanel() {
+            debugContent.innerHTML = '';
+        }
+
+        // Override console.log and console.error
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            const message = args.map(arg => {
+                if (typeof arg === 'object') {
+                    return JSON.stringify(arg, null, 2);
+                }
+                return String(arg);
+            }).join(' ');
+            debugContent.innerHTML += `<div style="color: #00ff00;">[LOG] ${message}</div>`;
+            debugPanel.scrollTop = debugPanel.scrollHeight;
+        };
+
+        console.error = function(...args) {
+            originalConsoleError.apply(console, args);
+            const message = args.map(arg => {
+                if (arg instanceof Error) {
+                    return arg.stack || arg.message;
+                }
+                if (typeof arg === 'object') {
+                    return JSON.stringify(arg, null, 2);
+                }
+                return String(arg);
+            }).join(' ');
+            debugContent.innerHTML += `<div style="color: #ff0000;">[ERROR] ${message}</div>`;
+            debugPanel.scrollTop = debugPanel.scrollHeight;
+        };
+
         // Initialize everything
         async function initializePage() {
-            // Fetch profiles from API
-            const profilesData = await fetchProfiles();
+            console.log('Starting page initialization...');
+            
+            try {
+                // Fetch profiles from API
+                console.log('About to fetch profiles...');
+                console.log('Number of CHALLENGERS:', CHALLENGERS.length);
+                const profilesData = await fetchProfiles();
+                console.log('Number of Profiles fetched:', profilesData.length);
 
-            // Format profiles for display
-            const formattedProfiles = profilesData.map(formatProfileForDisplay);
+                // Format profiles for display
+                console.log('Formatting profiles...');
+                const formattedProfiles = profilesData.map(formatProfileForDisplay);
 
-            // Store all profiles data for searches
-            allProfilesData = formattedProfiles;
+                // Store all profiles data for searches
+                allProfilesData = formattedProfiles;
 
-            // Display profiles
-            displayProfiles(formattedProfiles);
+                // Display profiles
+                console.log('About to display profiles...');
+                displayProfiles(formattedProfiles);
 
-            // Set up functionality
-            setupSearch();
-            setupBackToTop();
+                // Set up functionality
+                console.log('Setting up search and back-to-top...');
+                setupSearch();
+                setupBackToTop();
 
-            // Check if search input has text on page load
-            if (searchInput.value.trim()) {
-                clearSearchBtn.classList.add('visible');
+                // Check if search input has text on page load
+                if (searchInput.value.trim()) {
+                    clearSearchBtn.classList.add('visible');
+                }
+
+                console.log('Page initialization complete!');
+            } catch (error) {
+                console.error('Error during initialization:', error);
+                // Remove loading indicator if there's an error
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+                // Show error message to user
+                const container = document.querySelector('.container');
+                if (container) {
+                    container.innerHTML += `
+                        <div style="color: red; padding: 20px; text-align: center;">
+                            Error loading profiles. Please try refreshing the page.
+                        </div>
+                    `;
+                }
             }
-
-            // Set up scroll listeners
-            window.addEventListener('scroll', updateScrollProgress);
         }
 
         // Start the application when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initializePage);
+        console.log('Setting up DOMContentLoaded listener...');
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM Content Loaded event fired!');
+            initializePage();
+        });
     </script>
 </body>
 
