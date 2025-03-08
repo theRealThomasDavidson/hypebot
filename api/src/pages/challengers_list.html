@@ -787,19 +787,55 @@
     </div>
 
     <script>
-        // API Endpoints
-        const API_BASE_URL = '${HOSTED_REPLACE_URL}/api';
-        const API_PROFILES = `${API_BASE_URL}/profiles`;
-        const API_PROJECTS = `${API_BASE_URL}/projects`;
-        const CHALLENGERS = ${CHALLENGERS_LIST};
+        // Debug browser environment
+        const debugBrowserInfo = {
+            userAgent: navigator.userAgent,
+            webview: navigator.userAgent.includes('wv'),
+            chrome: /Chrome\/([0-9]+)/.exec(navigator.userAgent)?.[1],
+            android: /Android ([0-9\.]+)/.exec(navigator.userAgent)?.[1],
+            webkit: /AppleWebKit\/([0-9\.]+)/.exec(navigator.userAgent)?.[1]
+        };
+        
+        console.log('Browser Environment:', debugBrowserInfo);
+        console.log('Document Ready State:', document.readyState);
+        console.log('Testing ES6 Support...');
+        
+        try {
+            // Test some ES6 features
+            const testArrowFn = () => true;
+            const testTemplate = `test`;
+            const testDestructuring = {...{a:1}};
+            console.log('ES6 Features supported');
+        } catch(e) {
+            console.error('ES6 Features not fully supported:', e);
+        }
+
+        // API Endpoints - using older string concat for compatibility
+        var API_BASE_URL = '${HOSTED_REPLACE_URL}/api';
+        var API_PROFILES = API_BASE_URL + '/profiles';
+        var API_PROJECTS = API_BASE_URL + '/projects';
+        var CHALLENGERS = ${CHALLENGERS_LIST} || [];  // Add fallback
+
+        // Use var instead of const/let for older browser compatibility
+        var allProfilesData = [];
+        var isInitialized = false;
+
+        // Ensure we have basic required functions
+        if (!Array.prototype.forEach) {
+            console.error('Basic array functions missing - browser too old');
+            document.body.innerHTML = '<div style="color: red; padding: 20px;">Your browser version is too old. Please update your browser.</div>';
+        }
 
         // =========================================================================
         // DATA FETCHING FROM API
         // =========================================================================
 
         // Fetch all profiles
-        async function fetchProfiles() {
-            return CHALLENGERS;
+        function fetchProfiles() {
+            return new Promise(function(resolve) {
+                console.log('Fetching profiles...');
+                resolve(CHALLENGERS);
+            });
         }
 
         // Format profile data for display
@@ -830,9 +866,6 @@
         const loadingIndicator = document.getElementById('loading-indicator');
         const backToTopButton = document.getElementById('back-to-top');
         const scrollProgress = document.querySelector('.scroll-progress');
-
-        // Store all profiles data for subsequent searches
-        let allProfilesData = [];
 
         // Create card DOM element
         function createCardElement(profile, index) {
@@ -886,10 +919,11 @@
                 threshold: 0.1
             };
 
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
+            // Observer for lazy loading images - convert arrow function to regular function
+            var observer = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(function(entry) {
                     if (entry.isIntersecting) {
-                        const img = entry.target;
+                        var img = entry.target;
                         img.src = img.getAttribute('data-src');
                         img.removeAttribute('data-src');
                         observer.unobserve(img);
@@ -917,38 +951,22 @@
 
         // Display profiles from the data
         function displayProfiles(profiles) {
-            // Clear existing cards
             clearProfileCards();
-
-            // Hide featured section by default (only show with AI search)
             document.querySelector('.featured-section').classList.remove('ai-active');
-
-            // Show loading indicator
             loadingIndicator.style.display = 'block';
 
-            // Use setTimeout to avoid blocking the UI
-            setTimeout(() => {
-                // Shuffle profiles for randomized display order
-                const shuffledProfiles = shuffleArray([...profiles]);
+            setTimeout(function() {
+                var shuffledProfiles = shuffleArray(profiles.slice()); // Use slice instead of spread
+                var regularFragment = document.createDocumentFragment();
 
-                // Batch DOM operations for regular cards
-                const regularFragment = document.createDocumentFragment();
-
-                shuffledProfiles.forEach((profile, index) => {
-                    const card = createCardElement(profile, index);
+                for (var i = 0; i < shuffledProfiles.length; i++) {
+                    var card = createCardElement(shuffledProfiles[i], i);
                     regularFragment.appendChild(card);
-                });
+                }
 
-                // Remove loading indicator
                 loadingIndicator.style.display = 'none';
-
-                // Append all cards at once
                 cardsContainer.appendChild(regularFragment);
-
-                // Initialize lazy loading
                 lazyLoadImages();
-
-                // Hide no results message
                 noResults.style.display = 'none';
             }, 10);
         }
@@ -1328,60 +1346,40 @@
             debugPanel.scrollTop = debugPanel.scrollHeight;
         };
 
-        // Initialize everything
-        async function initializePage() {
+        // Initialize everything without async/await
+        function initializePage() {
             console.log('Starting page initialization...');
             
-            try {
-                // Fetch profiles from API
-                console.log('About to fetch profiles...');
-                console.log('Number of CHALLENGERS:', CHALLENGERS.length);
-                const profilesData = await fetchProfiles();
-                console.log('Number of Profiles fetched:', profilesData.length);
-
-                // Format profiles for display
-                console.log('Formatting profiles...');
-                const formattedProfiles = profilesData.map(formatProfileForDisplay);
-
-                // Store all profiles data for searches
-                allProfilesData = formattedProfiles;
-
-                // Display profiles
-                console.log('About to display profiles...');
-                displayProfiles(formattedProfiles);
-
-                // Set up functionality
-                console.log('Setting up search and back-to-top...');
-                setupSearch();
-                setupBackToTop();
-
-                // Check if search input has text on page load
-                if (searchInput.value.trim()) {
-                    clearSearchBtn.classList.add('visible');
-                }
-
-                console.log('Page initialization complete!');
-            } catch (error) {
-                console.error('Error during initialization:', error);
-                // Remove loading indicator if there's an error
-                if (loadingIndicator) {
-                    loadingIndicator.style.display = 'none';
-                }
-                // Show error message to user
-                const container = document.querySelector('.container');
-                if (container) {
-                    container.innerHTML += `
-                        <div style="color: red; padding: 20px; text-align: center;">
-                            Error loading profiles. Please try refreshing the page.
-                        </div>
-                    `;
-                }
-            }
+            fetchProfiles()
+                .then(function(profilesData) {
+                    console.log('Number of Profiles fetched:', profilesData.length);
+                    var formattedProfiles = profilesData.map(formatProfileForDisplay);
+                    allProfilesData = formattedProfiles;
+                    displayProfiles(formattedProfiles);
+                    setupSearch();
+                    setupBackToTop();
+                    if (searchInput.value.trim()) {
+                        clearSearchBtn.classList.add('visible');
+                    }
+                    console.log('Page initialization complete!');
+                })
+                .catch(function(error) {
+                    console.error('Error during initialization:', error);
+                    if (loadingIndicator) {
+                        loadingIndicator.style.display = 'none';
+                    }
+                    var container = document.querySelector('.container');
+                    if (container) {
+                        container.innerHTML += 
+                            '<div style="color: red; padding: 20px; text-align: center;">' +
+                            'Error loading profiles. Please try refreshing the page.' +
+                            '</div>';
+                    }
+                });
         }
 
         // Start the application when DOM is loaded
-        console.log('Setting up DOMContentLoaded listener...');
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM Content Loaded event fired!');
             initializePage();
         });
