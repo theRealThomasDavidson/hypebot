@@ -1,5 +1,19 @@
 const { supabase } = require('../lib/supabase');
 
+async function fetchAllProfiles() {
+    try {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*');
+
+        if (error) throw error;
+        return data || [];
+    } catch (error) {
+        console.error('Error fetching profiles:', error);
+        throw error;
+    }
+}
+
 /**
  * Get all profiles
  * @param {import('express').Request} req 
@@ -7,12 +21,7 @@ const { supabase } = require('../lib/supabase');
  */
 async function getAllProfiles(req, res) {
     try {
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('*');
-
-        if (error) throw error;
-
+        const data = await fetchAllProfiles();
         res.json({
             success: true,
             data: data,
@@ -339,5 +348,6 @@ module.exports = {
     getProfileById,
     createProfile,
     updateProfile,
-    deleteProfile
+    deleteProfile,
+    fetchAllProfiles
 }; 
