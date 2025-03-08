@@ -784,10 +784,14 @@
 
         // Format profile data for display
         function formatProfileForDisplay(profile) {
+            console.log('Raw profile data:', profile);
+            console.log('Profile image:', profile.image);
+            console.log('Profile pic_url:', profile.pic_url);
+
             return {
                 id: profile.id,
                 name: profile.name,
-                imageUrl: profile.pic_url || 'https://randomuser.me/api/portraits/lego/1.jpg', // Fallback image
+                image: profile.image || profile.pic_url || 'https://randomuser.me/api/portraits/lego/1.jpg', // Try image first, then pic_url, then fallback
                 title: profile.blurb || 'GauntletAI Challenger',
                 bio: profile.bio || 'No bio available',
                 profileUrl: `/pages/challenger/${profile.id}`,
@@ -822,7 +826,7 @@
 
             card.innerHTML = `
                 <div class="card-img-container">
-                    <img data-src="${profile.imageUrl}" alt="${profile.name}" class="card-img" loading="lazy">
+                    <img src="${profile.image}" alt="${profile.name}" class="card-img">
                 </div>
                 <div class="card-content">
                     <h3 class="card-name">${profile.name}</h3>
@@ -836,16 +840,18 @@
 
         // Create featured profile card
         function createFeaturedCardElement(profile) {
+            console.log('Creating featured card for profile:', profile.name);
+            console.log('Image data:', profile.image);
+            console.log('Image data type:', typeof profile.image);
+            console.log('Image data length:', profile.image ? profile.image.length : 0);
+
             const card = document.createElement('div');
             card.className = 'featured-card';
-
-            // Add relevance match percentage (simulated)
-            // In a real AI implementation, this would come from the AI's confidence score
-            const matchPercent = Math.floor(Math.random() * 20) + 80; // Random 80-99% match
+            const matchPercent = Math.floor(Math.random() * 20) + 80;
 
             card.innerHTML = `
                 <div class="featured-img-container">
-                    <img data-src="${profile.imageUrl}" alt="${profile.name}" class="featured-img" loading="lazy">
+                    <img src="${profile.image}" alt="${profile.name}" class="featured-img" onerror="console.log('Featured image failed to load:', this.src);">
                     <div class="match-percent">${matchPercent}% match</div>
                 </div>
                 <div class="card-content">
