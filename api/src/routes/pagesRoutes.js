@@ -10,12 +10,6 @@ if (!pagesController.challengers_list || !pagesController.challenger_profile) {
                   Object.keys(pagesController));
 }
 
-/**
- * @route   GET /pages/
- * @desc    View the challenger list page
- * @access  Public
- */
-router.get('/', pagesController.challengers_list);
 
 /**
  * @route   GET /pages/challenger_profile/:challenger_id
@@ -24,4 +18,10 @@ router.get('/', pagesController.challengers_list);
  */
 router.get('/challenger/:challenger_id', pagesController.challenger_profile);
 
+/**
+ * @route   GET /pages/
+ * @desc    View the challenger list page
+ * @access  Public
+ */
+router.get('/:id', pagesController.challengers_list);
 module.exports = router;
