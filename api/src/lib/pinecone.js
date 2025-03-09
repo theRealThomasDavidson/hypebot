@@ -39,6 +39,7 @@ async function connectPinecone() {
     console.log(`Connecting to index '${indexName}' at host '${indexHost}'...`);
     
     // Note: According to the updated SDK, we need to specify both name and host
+    console.log(`Connecting to index '${indexName}' at host '${indexHost}'...`);
     pineconeIndex = pineconeClient.index(indexName, indexHost);
     
     // Verify connection with a simple operation
@@ -56,7 +57,8 @@ async function connectPinecone() {
       index: pineconeIndex
     };
   } catch (error) {
-    console.error('Error connecting to Pinecone index:', error);
+    console.error('Error setting up Pinecone:', error);
+    console.error('Error details:', error.message);
     throw error;
   }
 }
@@ -324,10 +326,11 @@ async function searchSimilarDocuments(queryEmbedding, limit = 5, threshold = 0.0
       .filter(match => match.score >= threshold)
       .map(match => ({
         id: match.id,
+        userId: match.metadata.userId,
         text: match.metadata.text,
-        userId: match.metadata.userId, // Changed from profile_id to userId
-        score: match.score, // Changed from similarity to score to match controller
-        metadata: match.metadata // Include full metadata
+        type: match.metadata.type,
+        score: match.score,
+        metadata: match.metadata
       }))
       .slice(0, limit);
     
@@ -496,4 +499,5 @@ module.exports = {
   createIndex,
   describeIndex,
   deleteIndex,
+  setupMockPinecone
 }; 

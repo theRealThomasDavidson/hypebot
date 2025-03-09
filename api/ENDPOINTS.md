@@ -28,6 +28,10 @@ This document provides comprehensive information about all available API endpoin
       - [POST /api/projects](#post-apiprojects)
       - [PUT /api/projects/:id](#put-apiprojectsid)
       - [DELETE /api/projects/:id](#delete-apiprojectsid)
+    - [Chatbot](#chatbot)
+      - [POST /api/chat/query](#post-apichatquery)
+      - [GET /api/chat/conversations/:id](#get-apichatconversationsid)
+      - [DELETE /api/chat/conversations/:id](#delete-apichatconversationsid)
   - [Adding New Endpoint Documentation](#adding-new-endpoint-documentation)
 
 ## Overview
@@ -580,6 +584,130 @@ Delete a project.
 
 **Error Responses:**
 - `404 Not Found`: If the project with the specified ID does not exist
+
+### Chatbot
+
+#### POST /api/chat/query
+
+Submit a natural language query to the chatbot about profiles and projects.
+
+**Request Body:**
+```json
+{
+  "query": "Tell me about John's projects that used React",
+  "conversation_id": "uuid", // Optional - to maintain conversation context
+  "max_results": 5 // Optional - limit number of results
+}
+```
+
+**Required Fields:**
+- `query` (string): The natural language query about profiles or projects
+
+**Optional Fields:**
+- `conversation_id` (string): UUID of an existing conversation to maintain context
+- `max_results` (number): Maximum number of results to return (default: 5)
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "response": "John has worked on 2 projects using React. The first project is 'Project Title' which is a web application that...",
+    "conversation_id": "uuid",
+    "referenced_profiles": [
+      {
+        "id": "uuid",
+        "name": "John Doe",
+        "relevance_score": 0.95
+      }
+    ],
+    "referenced_projects": [
+      {
+        "id": "uuid",
+        "title": "Project Title",
+        "relevance_score": 0.88
+      }
+    ],
+    "sources": [
+      {
+        "type": "profile",
+        "id": "uuid",
+        "excerpt": "Relevant text from profile...",
+        "relevance_score": 0.92
+      },
+      {
+        "type": "project",
+        "id": "uuid",
+        "excerpt": "Relevant text from project...",
+        "relevance_score": 0.85
+      }
+    ]
+  },
+  "message": "Query processed successfully"
+}
+```
+
+**Error Responses:**
+- `400 Bad Request`: If the query is empty or invalid
+- `429 Too Many Requests`: If rate limit is exceeded
+
+#### GET /api/chat/conversations/:id
+
+Retrieve the history of a specific conversation.
+
+**Parameters:**
+- `id` (path parameter, required): The UUID of the conversation to retrieve
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tell me about John's projects",
+        "timestamp": "2002-08-08T00:00:00.000Z"
+      },
+      {
+        "role": "assistant",
+        "content": "John has worked on several projects...",
+        "timestamp": "2002-08-08T00:00:00.000Z",
+        "referenced_profiles": ["uuid"],
+        "referenced_projects": ["uuid"]
+      }
+    ],
+    "created_at": "2002-08-08T00:00:00.000Z",
+    "updated_at": "2002-08-08T00:00:00.000Z"
+  },
+  "message": "Conversation retrieved successfully"
+}
+```
+
+**Error Responses:**
+- `404 Not Found`: If the conversation with the specified ID does not exist
+
+#### DELETE /api/chat/conversations/:id
+
+Delete a conversation history.
+
+**Parameters:**
+- `id` (path parameter, required): The UUID of the conversation to delete
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid"
+  },
+  "message": "Conversation deleted successfully"
+}
+```
+
+**Error Responses:**
+- `404 Not Found`: If the conversation with the specified ID does not exist
 
 ## Adding New Endpoint Documentation
 

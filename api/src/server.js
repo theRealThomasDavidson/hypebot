@@ -26,9 +26,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Import routes
 const documentsRoutes = require('./routes/documentsRoutes');
+const chatRoutes = require('./routes/chat.routes');
 
 // Set up routes
 app.use('/api/documents', documentsRoutes);
+app.use('/api/chat', chatRoutes);
 app.use('/api/profiles', profileRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/profiles/:profileId/projects', profileProjectsRoutes);
@@ -52,13 +54,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Initialize server
+// Initialize services and start server
 async function startServer() {
   try {
     console.log('Initializing Pinecone connection...');
     const connection = await connectPinecone();
     console.log('✅ Pinecone connection initialized successfully');
-
+    
     app.listen(PORT, () => {
       console.log(`✅ Server running on http://localhost:${PORT}`);
       console.log(`🩺 Health check available at http://localhost:${PORT}/health`);

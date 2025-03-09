@@ -698,7 +698,37 @@
             background-color: #2980b9;
             transform: translateY(-3px);
         }
+
+        /* Chat button */
+        .chat-button {
+            position: fixed;
+            bottom: 80px; /* Position above the back-to-top button */
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .chat-button:hover {
+            transform: translateY(-3px);
+            background-color: #27ae60;
+        }
+
+        .chat-button i {
+            font-size: 24px;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
@@ -754,6 +784,11 @@
                 </div>
             </div>
         </div>
+
+        <!-- Chat button -->
+        <a href="/pages/chat" class="chat-button" title="Chat with GauntletAI">
+            <i class="fas fa-comments"></i>
+        </a>
 
         <!-- Back to top button -->
         <button id="back-to-top" class="back-to-top">
