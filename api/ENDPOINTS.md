@@ -32,6 +32,7 @@ This document provides comprehensive information about all available API endpoin
       - [POST /api/chat/query](#post-apichatquery)
       - [GET /api/chat/conversations/:id](#get-apichatconversationsid)
       - [DELETE /api/chat/conversations/:id](#delete-apichatconversationsid)
+      - [POST /api/transcribe](#post-apitranscribe)
   - [Adding New Endpoint Documentation](#adding-new-endpoint-documentation)
 
 ## Overview
@@ -708,6 +709,31 @@ Delete a conversation history.
 
 **Error Responses:**
 - `404 Not Found`: If the conversation with the specified ID does not exist
+
+#### POST /api/transcribe
+
+Submit audio for transcription using Whisper API.
+
+**Request Body:**
+- `FormData` containing:
+  - `audio` (file, required): Audio file in WAV format, 16kHz mono
+  - Maximum file size: 25MB
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "text": "Transcribed text from the audio"
+  },
+  "message": "Audio transcribed successfully"
+}
+```
+
+**Error Responses:**
+- `400 Bad Request`: If audio file is missing or invalid
+- `413 Payload Too Large`: If audio file exceeds 25MB
+- `500 Internal Server Error`: If transcription fails
 
 ## Adding New Endpoint Documentation
 
