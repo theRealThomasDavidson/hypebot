@@ -18,6 +18,13 @@ if (!pagesController.challengers_list || !pagesController.challenger_profile) {
 router.get('/function', pagesController.function_explorer);
 
 /**
+ * @route   GET /pages/polyfill
+ * @desc    Serve the polyfills.js file
+ * @access  Public
+ */
+router.get('/polyfill', pagesController.servePolyfills);
+
+/**
  * @route   GET /pages/challenger_profile/:challenger_id
  * @desc    View a challenger's profile page
  * @access  Public

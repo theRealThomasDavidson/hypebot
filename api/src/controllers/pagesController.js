@@ -9,6 +9,20 @@ const PAGES_DIR = path.join(__dirname, '..', 'pages');
 // Get API URL from environment or use default (without trailing slash)
 const HOSTED_URL = (process.env.HOSTED_URL || 'http://localhost:3000').replace(/\/$/, '');
 
+// Serve polyfills.js
+const servePolyfills = (req, res) => {
+    const polyfillPath = path.join(PAGES_DIR, 'polyfills.js');
+    fs.readFile(polyfillPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading polyfills:', err);
+            return res.status(500).send('Error loading polyfills');
+        }
+        res.setHeader('Content-Type', 'application/javascript');
+        res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+        res.send(data);
+    });
+};
+
 // Function to fetch and convert image to base64
 const getImageAsBase64 = async (url) => {
     if (!url) return null;
@@ -47,6 +61,10 @@ const serveFormattedHtml = (filePath, res, replace_data) => {
         for (const key in replace_data) {
             formattedData = formattedData.replace(new RegExp(`\\$\{${key}\\}`, 'g'), replace_data[key]);
         }
+
+        // Add our local polyfill script
+        const polyfillScript = '<script src="polyfills.js"></script>';
+        formattedData = formattedData.replace(/<head>/, `<head>\n    ${polyfillScript}`);
 
         res.setHeader('Content-Type', 'text/html');
         res.send(formattedData);
@@ -98,4 +116,5 @@ module.exports = {
     challengers_list,
     challenger_profile,
     function_explorer,
+    servePolyfills,
 };

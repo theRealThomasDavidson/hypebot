@@ -1,5 +1,9 @@
 # GauntletAI Demo Day Showcase - Private Implementation Notes
 
+
+
+
+
 ## Current Implementation Status
 
 ### Core Features Status
@@ -18,6 +22,9 @@
 - AI Integration:
 
 ## Platform Limitations (Ohmni Robot)
+
+User Agent: Mozilla/5.0 (Linux; Android 7.1.2; UP-CHT01 Build/NJH47B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/52.0.2743.100 Safari/537.36
+
 ### Browser Constraints
 - React functionality fails to work properly in Ohmni's browser app
 - API calls fail after initial page load

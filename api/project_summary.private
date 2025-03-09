@@ -13,93 +13,94 @@ Mozilla/5.0 (Linux; Android 7.1.2; UP-CHT01 Build/NJH47B; wv) AppleWebKit/537.36
 - **WebKit Version**: 537.36
 - **Mode**: WebView (wv flag)
 
-### JavaScript Compatibility (Chrome 52 / Android WebView)
+### Chrome 52 Compatibility
+- **Release Date**: July 2016
+- **JavaScript Engine**: V8 5.2
+- **ECMAScript Support**: Up to ES2015 (partial)
 
-#### Supported Features:
-- Basic ES5 features (fully supported)
-- Some ES6 features:
-  - Array.from()
-  - Array.prototype.find
-  - Array.prototype.findIndex
-  - Basic Promises
-  - Object.assign()
-  - String.prototype.includes
-  - String.prototype.startsWith/endsWith
-
-#### Not Supported / Unreliable:
-- ES6 Classes
-- Arrow Functions
-- Template Literals
-- Destructuring
-- Spread/Rest operators
-- async/await
-- Map/Set
-- let/const declarations
-- Default parameters
-- Modules (import/export)
-- Promise.finally()
-
-#### Partial/Buggy Support:
-- Fetch API
-- localStorage in WebView
-- CSS Grid
-- Flexbox (old syntax might be needed)
-- WebSockets
-- IndexedDB
-
-### Technical Implications
-1. **Browser Age**:
-   - Chrome 52 is from 2016
-   - Many modern JavaScript features may not be supported
-   - ES6 features might be partially or not supported
-
-2. **WebView Limitations**:
-   - Running in WebView mode means limited browser functionality
-   - Some browser APIs might be restricted
-   - Performance might be different from full Chrome
-
-3. **Android Version**:
-   - Android 7.1.2 is from 2017
-   - May have older WebView implementation
-   - Could have memory constraints
-
-### Development Considerations
-1. Need to use older JavaScript syntax:
-   - Avoid modern ES6+ features
-   - Use var instead of const/let
-   - Avoid template literals
-   - Be cautious with spread operators
-   - Polyfill modern functions
-
-2. Browser Compatibility:
-   - Test for feature availability
-   - Provide fallbacks for modern features
-   - Keep JavaScript lightweight
-   - Minimize complex DOM operations
-
-3. Performance:
-   - Batch DOM updates
-   - Minimize animations
-   - Be cautious with memory usage
-   - Consider reduced CPU/GPU capabilities
-
-### Required Polyfills
-For modern JavaScript features, we'll need polyfills for:
-1. Promise
-2. Array methods (from, find, findIndex)
-3. Object.assign
-4. String methods (includes, startsWith, endsWith)
-5. Function.prototype.bind
-6. Array.prototype.forEach (for very old WebView versions)
-
-### Recommended Approach
-1. Use a minimal polyfill bundle
-2. Write ES5 compatible code
-3. Test feature support before using:
-   ```javascript
-   if (typeof Promise !== 'undefined') {
-     // Use promises
-   } else {
-     // Use callbacks
+#### VS Code Extensions for Compatibility:
+1. **ESLint with specific config**:
+   ```json
+   {
+     "parserOptions": {
+       "ecmaVersion": 5
+     },
+     "rules": {
+       "no-var": "off",
+       "prefer-const": "off",
+       "arrow-body-style": "off",
+       "template-curly-spacing": "off"
+     }
    }
-   ``` 
+   ```
+
+2. **Recommended Extensions**:
+   - "dbaeumer.vscode-eslint" - ESLint
+   - "browserslist" - Set Chrome 52 as target
+   - "es5-ext" - ES5 compatibility checker
+
+3. **Browserslist Config**:
+   ```
+   Chrome 52
+   Android >= 4
+   ```
+
+### JavaScript Feature Support
+
+#### Fully Supported:
+- var declarations
+- function declarations
+- Object.keys()
+- Array.prototype methods (forEach, map, filter)
+- Basic DOM manipulation
+- setTimeout/setInterval
+- Basic Promise support
+
+#### Not Supported:
+- const/let
+- Arrow functions
+- Template literals
+- Destructuring
+- Spread operator
+- async/await
+- Classes
+- Modules (import/export)
+
+#### Partial Support:
+- Promises (basic only)
+- Object.assign
+- Array.from
+
+### Development Guidelines
+1. **Always Use**:
+   - var instead of const/let
+   - function() instead of () =>
+   - String concatenation instead of template literals
+   - Object.assign instead of spread
+   - Regular loops instead of for...of
+
+2. **Testing Process**:
+   - Test in Chrome 52 emulator
+   - Use Android Studio with API 25 emulator
+   - Check polyfill presence
+   - Validate with ESLint ES5 rules
+
+3. **Required Polyfills**:
+   ```javascript
+   // Core polyfills needed
+   require('core-js/features/promise');
+   require('core-js/features/object/assign');
+   require('core-js/features/array/from');
+   ```
+
+### VS Code Workspace Settings
+```json
+{
+  "javascript.validate.enable": true,
+  "javascript.suggestionActions.enabled": true,
+  "javascript.preferences.quoteStyle": "single",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}
+``` 
