@@ -34,8 +34,14 @@ const challenger_profile = (req, res) => {
     serveFormattedHtml(filePath, res);
 };
 
+const chat = (req, res) => {
+    const filePath = path.join(PAGES_DIR, 'chat.html');
+    serveFormattedHtml(filePath, res);
+};
+
 // Export functions directly to avoid any module loading issues
 module.exports = {
     challengers_list,
     challenger_profile,
+    chat
 };
