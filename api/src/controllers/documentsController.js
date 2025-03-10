@@ -175,5 +175,6 @@ module.exports = {
   createDocument,
   searchDocuments,
   deleteDocument,
-  deleteUserDocuments
+  deleteUserDocuments,
+  generateEmbedding
 }; 

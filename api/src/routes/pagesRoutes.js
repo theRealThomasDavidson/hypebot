@@ -5,7 +5,7 @@ const router = express.Router();
 const pagesController = require('../controllers/pagesController');
 
 // Verify that required functions exist
-if (!pagesController.challengers_list || !pagesController.challenger_profile) {
+if (!pagesController.challengers_list || !pagesController.challenger_profile || !pagesController.chat) {
     console.error('ERROR: pagesController functions are not defined properly:', 
                   Object.keys(pagesController));
 }
@@ -23,6 +23,13 @@ router.get('/function', pagesController.function_explorer);
  * @access  Public
  */
 router.get('/polyfill', pagesController.servePolyfills);
+
+/**
+ * @route   GET /pages/chat
+ * @desc    View the chat interface page
+ * @access  Public
+ */
+router.get('/chat', pagesController.chat);
 
 /**
  * @route   GET /pages/challenger_profile/:challenger_id

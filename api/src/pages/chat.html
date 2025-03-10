@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GauntletAI Chat</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --text-color: #333;
+            --light-gray: #f5f7fa;
+            --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container {
+            flex: 1;
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 40px);
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+
+        .chat-header h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            margin-left: auto;
+        }
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        .user .message-content {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 15px;
+        }
+
+        .bot .message-content {
+            background: var(--light-gray);
+            color: var(--text-color);
+            border-radius: 15px 15px 15px 0;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .voice-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .voice-btn:hover {
+            background: #27ae60;
+        }
+
+        .voice-btn.recording {
+            background: #e74c3c;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .voice-btn i {
+            font-size: 20px;
+        }
+
+        /* Welcome message styling */
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            margin: 20px;
+            padding: 20px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>GauntletAI Assistant</h1>
+            <p>Ask me about our talented challengers and their projects!</p>
+        </div>
+        
+        <div class="chat-messages" id="chat-messages">
+            <div class="welcome-message">
+                👋 Hi! I'm your GauntletAI Assistant. I can help you:
+                <br>• Find challengers with specific skills
+                <br>• Learn about projects and technologies
+                <br>• Discover talented developers
+                <br><br>What would you like to know?
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <input type="text" 
+                   class="chat-input" 
+                   id="chat-input"
+                   placeholder="Type your message or use voice input..."
+                   autocomplete="off">
+            <button class="voice-btn" id="voice-btn" title="Voice Input">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const voiceBtn = document.getElementById('voice-btn');
+
+        // Voice recording state
+        let isRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+
+        // Add message to chat
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.textContent = content;
+            
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Handle chat input
+        async function handleChatInput(text) {
+            if (!text.trim()) return;
+            
+            // Add user message
+            addMessage(text, true);
+            
+            try {
+                // Send to chat API
+                const response = await fetch('/api/chat/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: text
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success && data.data?.response) {
+                    addMessage(data.data.response);
+                } else {
+                    addMessage('Sorry, I encountered an error. Please try again.');
+                }
+            } catch (error) {
+                console.error('Chat error:', error);
+                addMessage('Sorry, I encountered an error. Please try again.');
+            }
+        }
+
+        // Setup voice input
+        async function setupVoiceInput() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                mediaRecorder = new MediaRecorder(stream);
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    audioChunks = [];
+                    
+                    // Send to voice transcription endpoint
+                    try {
+                        const formData = new FormData();
+                        formData.append('audio', audioBlob);
+                        
+                        const response = await fetch('/api/transcribe', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        const data = await response.json();
+                        if (data.success && data.data?.text) {
+                            chatInput.value = data.data.text;
+                            // Optionally auto-send the transcribed text
+                            handleChatInput(data.data.text);
+                            chatInput.value = '';  // Clear input after sending
+                        } else {
+                            console.error('Transcription error:', data.error);
+                        }
+                    } catch (error) {
+                        console.error('Voice transcription error:', error);
+                    }
+                };
+            } catch (error) {
+                console.error('Media device error:', error);
+                voiceBtn.style.display = 'none';
+            }
+        }
+
+        // Event Listeners
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const text = chatInput.value;
+                chatInput.value = '';
+                handleChatInput(text);
+            }
+        });
+
+        voiceBtn.addEventListener('click', () => {
+            if (!mediaRecorder) {
+                setupVoiceInput();
+                return;
+            }
+            
+            if (isRecording) {
+                // Stop recording
+                mediaRecorder.stop();
+                voiceBtn.classList.remove('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            } else {
+                // Start recording
+                audioChunks = [];
+                mediaRecorder.start();
+                voiceBtn.classList.add('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
+            }
+            
+            isRecording = !isRecording;
+        });
+
+        // Initialize chat
+        document.addEventListener('DOMContentLoaded', () => {
+            // Focus input
+            chatInput.focus();
+        });
+    </script>
+</body>
+</html> 
