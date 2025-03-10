@@ -80,4 +80,36 @@ function sayEvilPhrase() {
 function getBotInfo() {
     const info = Ohmni.requestBotInfo();
     document.getElementById('botInfo').textContent = JSON.stringify(info, null, 2);
-} 
+}
+
+// Import audio handling module
+const { sendAudioToWhisper, captureAndPrepareAudio } = require('./handle-audio');
+
+// Remove all the old audio handling code from here
+// (resampleAudioTo16k, audioBufferToWav, captureAndPrepareAudio, sendAudioToWhisper)
+
+// Example usage in Ohmni control:
+async function handleVoiceCommand() {
+    try {
+        const formData = await sendAudioToWhisper(5000); // 5 seconds recording
+        
+        // Send to Whisper API
+        const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+            },
+            body: formData
+        });
+        
+        const result = await response.json();
+        console.log('Voice command:', result.text);
+        
+        // Process the command
+        // TODO: Add command processing logic
+        
+    } catch (error) {
+        console.error('Voice command failed:', error);
+        Ohmni.say("Sorry, I couldn't understand that. Could you try again?");
+    }
+}

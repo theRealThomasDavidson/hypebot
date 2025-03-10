@@ -645,6 +645,27 @@
                     socialLinks.appendChild(gauntletLink);
                 }
             }
+
+            // Update social links
+            if (profile.github_url) {
+                const githubLink = document.getElementById('github-link');
+                githubLink.href = profile.github_url;
+                githubLink.style.display = 'inline-flex';
+            } else {
+                document.getElementById('github-link').style.display = 'none';
+            }
+
+            if (profile.linkedin_url) {
+                const linkedinLink = document.getElementById('linkedin-link');
+                linkedinLink.href = profile.linkedin_url;
+                linkedinLink.style.display = 'inline-flex';
+            } else {
+                document.getElementById('linkedin-link').style.display = 'none';
+            }
+
+            // Set up projects link
+            const projectsLink = document.getElementById('projects-link');
+            projectsLink.href = `/pages/challenger/${profile.id}/projects`;
         }
 
         // Create project card

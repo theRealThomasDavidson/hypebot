@@ -2,6 +2,8 @@
 DROP TABLE IF EXISTS projects CASCADE;
 DROP TABLE IF EXISTS profiles CASCADE;
 DROP TABLE IF EXISTS documents CASCADE;
+DROP TABLE IF EXISTS conversations CASCADE;
+DROP TABLE IF EXISTS conversation_messages CASCADE;
 
 -- Create the projects table
 CREATE TABLE projects (
@@ -35,6 +37,25 @@ CREATE TABLE profiles (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create conversations table
+CREATE TABLE conversations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create conversation messages table
+CREATE TABLE conversation_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE,
+    role VARCHAR(50) NOT NULL, -- 'user' or 'assistant'
+    content TEXT NOT NULL,
+    referenced_profiles UUID[] DEFAULT '{}',
+    referenced_projects UUID[] DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT valid_role CHECK (role IN ('user', 'assistant'))
+);
+
 -- Add the foreign key constraint after both tables exist
 ALTER TABLE projects 
 ADD CONSTRAINT fk_profile 
@@ -44,3 +65,5 @@ ON DELETE CASCADE;
 -- Create indexes for performance
 CREATE INDEX idx_projects_profile_id ON projects(profile_id);
 CREATE INDEX idx_profiles_name ON profiles(name);
+CREATE INDEX idx_conversation_messages ON conversation_messages(conversation_id);
+CREATE INDEX idx_conversation_messages_created ON conversation_messages(created_at);
