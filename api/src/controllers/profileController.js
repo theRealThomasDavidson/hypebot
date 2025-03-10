@@ -1,4 +1,6 @@
 const { supabase } = require('../lib/supabase');
+const { generateEmbedding } = require('./documentsController');
+const pineconeModule = require('../lib/pinecone');
 
 /**
  * Get all profiles
@@ -154,6 +156,52 @@ async function createProfile(req, res) {
 
         if (error) throw error;
 
+        // Index profile in Pinecone
+        // Emphasize name by repeating it
+        const nameEmphasis = [
+            `Profile: ${data.name}`,
+            `Name: ${data.name}`,
+            `Challenger: ${data.name}`,
+            `About ${data.name}:`
+        ].join('\n');
+
+        const profileFields = {
+            searchable_name: data.name || '',
+            bio: data.bio || '',
+            blurb: data.blurb || '',
+            skills: (data.skills || []).join(', ')
+        };
+
+        // Combine all fields into a single text with emphasized name
+        const combinedText = [
+            nameEmphasis,
+            ...Object.entries(profileFields)
+                .filter(([_, value]) => value)
+                .map(([field, value]) => `${field}: ${value}`)
+        ].join('\n');
+
+        try {
+            // Generate embedding for the combined text
+            const embedding = await generateEmbedding(combinedText);
+
+            // Store in Pinecone with metadata
+            await pineconeModule.storeDocumentWithEmbedding(
+                combinedText,
+                data.id,
+                embedding,
+                {
+                    type: 'profile',
+                    profile_id: data.id,
+                    name: data.name,
+                    skills: data.skills || []
+                }
+            );
+
+            console.log(`Indexed profile ${data.id}`);
+        } catch (error) {
+            console.error(`Error indexing profile ${data.id}:`, error);
+        }
+
         res.status(201).json({
             success: true,
             data: data,
@@ -217,35 +265,15 @@ async function updateProfile(req, res) {
                 github_url,
                 linkedin_url,
                 gauntlet_url,
-                twitter_url,
-                updated_at: new Date().toISOString()
+                twitter_url
             })
             .eq('id', id)
             .select()
             .single();
 
         if (error) throw error;
+
         if (!data) {
-            return res.status(404).json({
-                success: false,
-                message: 'Profile not found',
-                error: {
-                    code: 'RESOURCE_NOT_FOUND',
-                    details: { id }
-                }
-            });
-        }
-
-        res.json({
-            success: true,
-            data: data,
-            message: "Profile updated successfully"
-        });
-    } catch (error) {
-        console.error('Error updating profile:', error);
-
-        // Check for PGRST116 error (Resource not found)
-        if (error && error.code === 'PGRST116') {
             return res.status(404).json({
                 success: false,
                 message: 'Profile not found',
@@ -256,6 +284,68 @@ async function updateProfile(req, res) {
             });
         }
 
+        // Delete existing profile embeddings
+        try {
+            await pineconeModule.deleteUserDocuments(id);
+            console.log(`Deleted existing embeddings for profile ${id}`);
+        } catch (error) {
+            console.error(`Error deleting existing embeddings for profile ${id}:`, error);
+            // Continue even if deletion fails
+        }
+
+        // Index updated profile in Pinecone
+        // Emphasize name by repeating it
+        const nameEmphasis = [
+            `Profile: ${data.name}`,
+            `Name: ${data.name}`,
+            `Challenger: ${data.name}`,
+            `About ${data.name}:`
+        ].join('\n');
+
+        const profileFields = {
+            searchable_name: data.name || '',
+            bio: data.bio || '',
+            blurb: data.blurb || '',
+            skills: (data.skills || []).join(', ')
+        };
+
+        // Combine all fields into a single text with emphasized name
+        const combinedText = [
+            nameEmphasis,
+            ...Object.entries(profileFields)
+                .filter(([_, value]) => value)
+                .map(([field, value]) => `${field}: ${value}`)
+        ].join('\n');
+
+        try {
+            // Generate embedding for the combined text
+            const embedding = await generateEmbedding(combinedText);
+
+            // Store in Pinecone with metadata
+            await pineconeModule.storeDocumentWithEmbedding(
+                combinedText,
+                data.id,
+                embedding,
+                {
+                    type: 'profile',
+                    profile_id: data.id,
+                    name: data.name,
+                    skills: data.skills || []
+                }
+            );
+
+            console.log(`Indexed profile ${data.id}`);
+        } catch (error) {
+            console.error(`Error indexing profile ${data.id}:`, error);
+        }
+
+        res.json({
+            success: true,
+            data: data,
+            message: "Profile updated successfully"
+        });
+    } catch (error) {
+        console.error('Error updating profile:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to update profile',
@@ -334,10 +424,84 @@ async function deleteProfile(req, res) {
     }
 }
 
+/**
+ * Index all existing profiles in Pinecone
+ * @returns {Promise<void>}
+ */
+async function indexAllProfiles() {
+    try {
+        console.log('Starting to index all profiles...');
+        
+        // Fetch all profiles from Supabase
+        const { data: profiles, error } = await supabase
+            .from('profiles')
+            .select('*');
+
+        if (error) throw error;
+
+        console.log(`Found ${profiles.length} profiles to index`);
+
+        // Process each profile
+        for (const profile of profiles) {
+            // Emphasize name by repeating it
+            const nameEmphasis = [
+                `Profile: ${profile.name}`,
+                `Name: ${profile.name}`,
+                `Challenger: ${profile.name}`,
+                `About ${profile.name}:`
+            ].join('\n');
+
+            const profileFields = {
+                searchable_name: profile.name || '', // Additional searchable name field
+                bio: profile.bio || '',
+                blurb: profile.blurb || '',
+                skills: (profile.skills || []).join(', ')
+            };
+
+            // Combine all fields into a single text with emphasized name
+            const combinedText = [
+                nameEmphasis,
+                ...Object.entries(profileFields)
+                    .filter(([_, value]) => value)
+                    .map(([field, value]) => `${field}: ${value}`)
+            ].join('\n');
+
+            try {
+                // Generate embedding for the combined text
+                const embedding = await generateEmbedding(combinedText);
+
+                // Store in Pinecone with metadata
+                await pineconeModule.storeDocumentWithEmbedding(
+                    combinedText,
+                    profile.id,
+                    embedding,
+                    {
+                        type: 'profile',
+                        profile_id: profile.id,
+                        name: profile.name,
+                        skills: profile.skills || []
+                    }
+                );
+
+                console.log(`Indexed profile ${profile.id}`);
+            } catch (error) {
+                console.error(`Error indexing profile ${profile.id}:`, error);
+                // Continue with other profiles even if one fails
+            }
+        }
+
+        console.log('Finished indexing all profiles');
+    } catch (error) {
+        console.error('Error indexing profiles:', error);
+        throw error;
+    }
+}
+
 module.exports = {
     getAllProfiles,
     getProfileById,
     createProfile,
     updateProfile,
-    deleteProfile
+    deleteProfile,
+    indexAllProfiles
 }; 

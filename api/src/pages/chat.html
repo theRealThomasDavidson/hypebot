@@ -236,7 +236,7 @@
 
                 const data = await response.json();
                 
-                if (data.success) {
+                if (data.success && data.data?.response) {
                     addMessage(data.data.response);
                 } else {
                     addMessage('Sorry, I encountered an error. Please try again.');
@@ -273,8 +273,11 @@
                         });
                         
                         const data = await response.json();
-                        if (data.success) {
-                            chatInput.value = data.text;
+                        if (data.success && data.data?.text) {
+                            chatInput.value = data.data.text;
+                            // Optionally auto-send the transcribed text
+                            handleChatInput(data.data.text);
+                            chatInput.value = '';  // Clear input after sending
                         } else {
                             console.error('Transcription error:', data.error);
                         }

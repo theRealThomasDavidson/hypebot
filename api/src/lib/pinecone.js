@@ -311,7 +311,7 @@ async function searchSimilarDocuments(queryEmbedding, limit = 5, threshold = 0.0
     // Query Pinecone following documentation
     const results = await global.pineconeIndex.query({
       vector: queryEmbedding,
-      topK: limit * 2, // Get more results than needed to filter by threshold
+      topK: limit,  // Only fetch what we need
       includeMetadata: true,
       filter: Object.keys(pineconeFilter).length > 0 ? pineconeFilter : undefined
     });

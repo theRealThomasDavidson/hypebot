@@ -22,7 +22,7 @@ function formatSearchResults(results) {
  * @returns {Promise<Array>} Formatted search results
  */
 async function adaptedSemanticSearch(query, limit = 5, options = {}) {
-  const { queryEmbedding, threshold = 0.5, filter = {} } = options;
+  const { queryEmbedding, threshold = 0.2, filter = {} } = options;
 
   const results = await searchSimilarDocuments(
     queryEmbedding,

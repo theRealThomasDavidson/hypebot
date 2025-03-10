@@ -9,6 +9,24 @@
 const { generateQueryEmbedding } = require('../openai/embeddings');
 const { adaptedSemanticSearch } = require('../pinecone/adapter');
 
+// Simple in-memory cache with TTL
+const cache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes in milliseconds
+const MAX_CACHE_SIZE = 1000; // Maximum number of cached queries
+
+function getCacheKey(query, limit, options) {
+  return `${query}:${limit}:${JSON.stringify(options)}`;
+}
+
+function clearOldCache() {
+  const now = Date.now();
+  for (const [key, value] of cache.entries()) {
+    if (now - value.timestamp > CACHE_TTL) {
+      cache.delete(key);
+    }
+  }
+}
+
 /**
  * Perform semantic search over profiles and projects
  * @param {string} query - The search query
@@ -21,6 +39,19 @@ async function semanticSearch(query, limit = 5, options = {}) {
     console.log(`Performing semantic search for query: "${query}"`);
     const startTime = Date.now();
 
+    // Check cache first
+    const cacheKey = getCacheKey(query, limit, options);
+    const cached = cache.get(cacheKey);
+    if (cached && (startTime - cached.timestamp) < CACHE_TTL) {
+      console.log('Cache hit! Returning cached results');
+      return cached.results;
+    }
+
+    // Clear old cache entries periodically
+    if (cache.size > MAX_CACHE_SIZE) {
+      clearOldCache();
+    }
+
     // Generate embedding for the query
     const queryEmbedding = await generateQueryEmbedding(query);
     
@@ -28,6 +59,12 @@ async function semanticSearch(query, limit = 5, options = {}) {
     const results = await adaptedSemanticSearch(query, limit, {
       ...options,
       queryEmbedding
+    });
+
+    // Cache the results
+    cache.set(cacheKey, {
+      results,
+      timestamp: startTime
     });
 
     const duration = Date.now() - startTime;

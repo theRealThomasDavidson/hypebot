@@ -24,17 +24,21 @@ function extractSourcesFromContext(results) {
   for (const result of results) {
     const type = result.content_type;
     console.log(`[TYPE DEBUG] Processing result in context - content_type="${type}"`);
+    
+    // Extract the UUID part before the timestamp
+    const sourceId = result.content_id.split('_')[0];
+
     if (type === 'profile') {
-      sources.profiles.push(result.content_id);
-      console.log(`[TYPE DEBUG] Added profile source: ${result.content_id}`);
+      sources.profiles.push(sourceId);
+      console.log(`[TYPE DEBUG] Added profile source: ${sourceId}`);
     } else if (type === 'project') {
-      sources.projects.push(result.content_id);
-      console.log(`[TYPE DEBUG] Added project source: ${result.content_id}`);
+      sources.projects.push(sourceId);
+      console.log(`[TYPE DEBUG] Added project source: ${sourceId}`);
     }
 
     sources.excerpts.push({
       type: type,
-      id: result.content_id,
+      id: sourceId,
       text: result.content_text.substring(0, 200) + '...' // Truncate for brevity
     });
   }
@@ -92,12 +96,15 @@ function extractSources(searchResults, threshold = 0.8) {
       return;
     }
 
+    // Extract the UUID part before the timestamp
+    const sourceId = result.content_id.split('_')[0];
+
     if (result.content_type === 'profile') {
-      console.log(`[TYPE DEBUG] Added profile source: ${result.content_id}`);
-      sources.profiles.push(result.content_id);
+      console.log(`[TYPE DEBUG] Added profile source: ${sourceId}`);
+      sources.profiles.push(sourceId);
     } else if (result.content_type === 'project') {
-      console.log(`[TYPE DEBUG] Added project source: ${result.content_id}`);
-      sources.projects.push(result.content_id);
+      console.log(`[TYPE DEBUG] Added project source: ${sourceId}`);
+      sources.projects.push(sourceId);
     }
   });
 
@@ -113,15 +120,15 @@ function extractSources(searchResults, threshold = 0.8) {
 async function generateResponse(query, searchResults) {
   try {
     // Extract sources with higher threshold for irrelevant queries
-    const sources = extractSources(searchResults, 0.8);
+    const sources = extractSources(searchResults, 0.2);
     
     // Check if any results are relevant to the query
     const isRelevantQuery = !query.toLowerCase().includes('blockchain') && 
-                           searchResults.some(result => result.similarity >= 0.8);
+                           searchResults.some(result => result.similarity >= 0.2);
 
     // Format context for OpenAI
     const context = searchResults
-      .filter(result => result.similarity >= 0.8)
+      .filter(result => result.similarity >= 0.2)
       .map(result => result.content_text)
       .join('\n\n');
 
