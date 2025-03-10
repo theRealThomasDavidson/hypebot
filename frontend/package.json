@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/preset-env": "^7.26.9",
     "@types/node": "^16.18.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "core-js": "^3.41.0",
     "react": "^18.2.0",
+    "react-app-polyfill": "^3.0.0",
     "react-dom": "^18.2.0",
-    "typescript": "^4.9.0"
+    "regenerator-runtime": "^0.14.1",
+    "typescript": "^4.9.0",
+    "whatwg-fetch": "^3.6.20"
   },
   "scripts": {
     "start": "craco start",
@@ -24,22 +29,35 @@
   },
   "browserslist": {
     "production": [
+      "Android >= 4.4",
+      "Chrome >= 49",
       ">0.2%",
       "not dead",
       "not op_mini all"
     ],
     "development": [
+      "Android >= 4.4",
+      "Chrome >= 49",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-class-properties": "^7.25.9",
+    "@babel/plugin-transform-private-methods": "^7.25.9",
+    "@babel/plugin-transform-private-property-in-object": "^7.25.9",
     "@craco/craco": "^7.1.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "react-scripts": "5.0.1"
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.1",
+    "process": "^0.11.10",
+    "react-scripts": "5.0.1",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5"
   }
 }
