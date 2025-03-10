@@ -1,0 +1,48 @@
+.ai-search-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: #4299e1;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ai-search-btn:hover {
+    background: #3182ce;
+    transform: translateY(-1px);
+}
+
+.ai-search-btn.active {
+    background: #2c5282;
+}
+
+.ai-search-btn.suggestion {
+    background: #ebf8ff;
+    color: #2b6cb0;
+}
+
+.ai-search-btn.suggestion:hover {
+    background: #bee3f8;
+}
+
+.sparkle-icon {
+    font-size: 1rem;
+    animation: sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+} 

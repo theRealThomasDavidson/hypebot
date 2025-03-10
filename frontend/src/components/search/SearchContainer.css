@@ -1,0 +1,121 @@
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.search-icon {
+    color: #718096;
+    font-size: 1.25rem;
+}
+
+#search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    color: #2d3748;
+    background: transparent;
+    padding: 0 0.5rem;
+}
+
+#search-input::placeholder {
+    color: #a0aec0;
+}
+
+#search-input.ai-active {
+    color: #2b6cb0;
+}
+
+.clear-search-btn {
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    padding: 0.25rem;
+    font-size: 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.clear-search-btn:hover {
+    color: #718096;
+    background: #f7fafc;
+}
+
+.ai-loading-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.ai-loading-indicator.active {
+    opacity: 1;
+}
+
+.loading-text {
+    font-size: 0.875rem;
+    color: #4299e1;
+}
+
+.ai-loading-dots {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.ai-loading-dots span {
+    width: 4px;
+    height: 4px;
+    background: #4299e1;
+    border-radius: 50%;
+    animation: loading 1s ease-in-out infinite;
+}
+
+.ai-loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.ai-loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes loading {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.5);
+        opacity: 0.5;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-container {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    #search-input {
+        order: 2;
+        width: 100%;
+        flex-basis: 100%;
+    }
+
+    .ai-loading-indicator {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+    }
+} 

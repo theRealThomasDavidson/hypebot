@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/app/
+    networks:
+      - challengers-network
+
+  # Uncomment this section when you want to include the API service
+  # api:
+  #   build:
+  #     context: ../api
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3001:3000"
+  #   environment:
+  #     - NODE_ENV=development
+  #   networks:
+  #     - challengers-network
+
+networks:
+  challengers-network:
+    driver: bridge 

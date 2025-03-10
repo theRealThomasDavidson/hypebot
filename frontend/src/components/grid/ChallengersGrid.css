@@ -1,0 +1,61 @@
+.challengers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 0;
+    color: #4a5568;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #4299e1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+.no-results {
+    text-align: center;
+    padding: 4rem 0;
+}
+
+.no-results-content {
+    color: #4a5568;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}
+
+.ai-suggestion {
+    background: #ebf8ff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.ai-suggestion p {
+    color: #2c5282;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .challengers-grid {
+        grid-template-columns: 1fr;
+    }
+} 

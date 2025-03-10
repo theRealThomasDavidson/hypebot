@@ -1,0 +1,31 @@
+.challengers-page {
+    padding: 2rem 0;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: #2d3748;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.error-message {
+    background-color: #fff5f5;
+    color: #c53030;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    text-align: center;
+    border: 1px solid #feb2b2;
+}
+
+@media (max-width: 768px) {
+    .challengers-page {
+        padding: 1rem 0;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+} 
